@@ -1,0 +1,3 @@
+{"player":{"playerId":"f62b659a-30ae-465b-8765-0096519dee70","playerName":"testName"},"msgType":"FC_LOGIN","version":1}
+{"player":{"playerId":"f62b659a-30ae-465b-8765-0096519dee70","playerName":"testName"},"msgType":"FC_GET_PARTICIPATING_GAMES","version":1}
+{"player":{"playerId":"f62b659a-30ae-465b-8765-0096519dee70","playerName":"testName"},"msgType":"FC_CREATE_GAME","version":1}

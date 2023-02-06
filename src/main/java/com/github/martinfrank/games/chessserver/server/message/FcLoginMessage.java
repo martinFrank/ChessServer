@@ -4,16 +4,13 @@ import com.github.martinfrank.games.chessserver.server.model.Player;
 
 public class FcLoginMessage extends Message{
 
-    private final Player player;
+    public final Player player;
 
     public FcLoginMessage(Player player) {
         super(MessageType.FC_LOGIN);
         this.player = player;
     }
 
-    public Player getPlayer(){
-        return player;
-    }
 
     @Override
     public String toString() {

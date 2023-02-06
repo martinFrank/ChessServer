@@ -4,18 +4,19 @@ import com.github.martinfrank.games.chessserver.server.model.Game;
 
 import java.util.List;
 
-public class FsSubmitServerInfoMessage extends Message{
+public class FsSubmitParticipatingGamesMessage extends Message{
 
-    private final List<Game> games;
-    public FsSubmitServerInfoMessage(List<Game> games) {
-        super(MessageType.FS_SUBMIT_SERVER_INFO);
-        this.games = games;
+    public final List<Game> participatingGames;
+
+    public FsSubmitParticipatingGamesMessage(List<Game> participatingGames) {
+        super(MessageType.FS_SUBMIT_PARTICIPATING_GAMES);
+        this.participatingGames = participatingGames;
     }
 
     @Override
     public String toString() {
         return "FsSubmitServerInfoMessage{" +
-                "games=" + games +
+                "participatingGames=" + participatingGames +
                 ", msgType=" + msgType +
                 ", version=" + version +
                 '}';

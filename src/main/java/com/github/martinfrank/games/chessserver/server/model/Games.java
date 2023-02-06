@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Games {
 
@@ -27,5 +28,14 @@ public class Games {
         games.add(game);
         LOGGER.debug("games.size() = "+games.size());
         return game;
+    }
+
+    public Game findById(UUID gameId) {
+        for(Game game: games){
+            if(game.gameId.equals(gameId)){
+                return game;
+            }
+        }
+        return null;
     }
 }

@@ -1,6 +1,9 @@
 package com.github.martinfrank.games.chessserver.server.model;
 
 
+import com.github.martinfrank.games.chessserver.server.model.chess.Board;
+import com.github.martinfrank.games.chessserver.server.model.chess.Color;
+
 import java.util.UUID;
 
 //laufendes Spiel
@@ -9,19 +12,21 @@ public class Game {
     public final UUID gameId = UUID.randomUUID();
     public final Player hostPlayer;
     private Player guestPlayer;
-    private Player currentPlayerId;
-    private Player white;
-    private Player black;
+    private Player currentPlayer;
+
+    private Color hostColor = Color.WHITE;
+    private Color guestColor = Color.BLACK;
     private boolean isStarted;
     private boolean isHostOnline;
     private boolean isGuestOnline;
 
-    //private List<Figure> figures
+    private long startTime = -1;
+
+    private Board board = new Board();
     //private List<Move> moveHistory;
 
     public Game(Player hostPlayer) {
         this.hostPlayer = hostPlayer;
-        white = hostPlayer;
         isHostOnline = true;
     }
 
@@ -55,21 +60,14 @@ public class Game {
 
     public void setStarted(boolean started) {
         isStarted = started;
+        currentPlayer = hostPlayer;
+        startTime = System.currentTimeMillis();
     }
 
-    public Player getWhite() {
-        return white;
+
+    public void setHostColor(Color desiredColor) {
+        hostColor = desiredColor;
+        guestColor = desiredColor.getOpposite();
     }
 
-    public void setWhite(Player white) {
-        this.white = white;
-    }
-
-    public Player getBlack() {
-        return black;
-    }
-
-    public void setBlack(Player black) {
-        this.black = black;
-    }
 }

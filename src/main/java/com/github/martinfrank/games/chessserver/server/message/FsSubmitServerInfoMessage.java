@@ -11,4 +11,13 @@ public class FsSubmitServerInfoMessage extends Message{
         super(MessageType.FS_SUBMIT_SERVER_INFO);
         this.games = games;
     }
+
+    @Override
+    public String toString() {
+        return "FsSubmitServerInfoMessage{" +
+                "games=" + games +
+                ", msgType=" + msgType +
+                ", version=" + version +
+                '}';
+    }
 }

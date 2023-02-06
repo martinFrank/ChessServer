@@ -1,9 +1,5 @@
 package com.github.martinfrank.games.chessserver.server.message;
 
-import com.github.martinfrank.games.chessserver.server.message.FcGetServerInfoMessage;
-import com.github.martinfrank.games.chessserver.server.message.Message;
-import com.github.martinfrank.games.chessserver.server.message.MessageParser;
-import com.github.martinfrank.games.chessserver.server.message.MessageType;
 import com.github.martinfrank.games.chessserver.server.model.Player;
 import org.junit.Assert;
 import org.junit.Test;
@@ -36,14 +32,15 @@ public class FcGetServerInfoMessageTest {
     public void testJsonToFcGetServerInfoMessage(){
         //given
         MessageParser messageParser = new MessageParser();
-        String json = "{\"player\":{\"playerId\":\"f62b659a-30ae-465b-8765-0096519dee70\",\"playerName\":\"testName\"},\"msgType\":\"FC_GET_SERVER_INFO\"}";
+        String json = "{\"player\":{\"playerId\":\"f62b659a-30ae-465b-8765-0096519dee70\",\"playerName\":\"testName\"},\"msgType\":\"FC_GET_SERVER_INFO\",\"version\":2}";
 
         //when
         Message message = messageParser.fromJson(json);
         FcGetServerInfoMessage fcGetServerInfoMessage = (FcGetServerInfoMessage) message;
 
         //then
-        Assert.assertEquals(TEST_NAME, fcGetServerInfoMessage.getPlayerData().playerName);
-        Assert.assertEquals(TEST_ID, fcGetServerInfoMessage.getPlayerData().playerId);
+        Assert.assertEquals(TEST_NAME, fcGetServerInfoMessage.getPlayer().playerName);
+        Assert.assertEquals(TEST_ID, fcGetServerInfoMessage.getPlayer().playerId);
+        Assert.assertEquals(2, fcGetServerInfoMessage.version);
     }
 }

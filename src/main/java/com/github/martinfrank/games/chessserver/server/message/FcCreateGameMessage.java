@@ -5,4 +5,12 @@ public class FcCreateGameMessage extends Message{
     public FcCreateGameMessage() {
         super(MessageType.FC_CREATE_GAME);
     }
+
+    @Override
+    public String toString() {
+        return "FcCreateGameMessage{" +
+                "msgType=" + msgType +
+                ", version=" + version +
+                '}';
+    }
 }

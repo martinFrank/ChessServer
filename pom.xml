@@ -28,6 +28,11 @@
             <version>2.8.7</version>
         </dependency>
         <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.6</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
@@ -56,7 +61,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        com.github.martinfrank.games.chessserver.App
+                                        com.github.martinfrank.games.chessserver.ChessServerApp
                                     </mainClass>
                                 </manifest>
                             </archive>

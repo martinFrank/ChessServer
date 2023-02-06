@@ -6,7 +6,8 @@ public class Player {
 
     public final UUID playerId;
     public final String playerName;
-    private boolean isOnline ;
+
+    private transient boolean isOnline ;
 
     public Player(UUID playerId, String playerName ){
         this.playerId = playerId;

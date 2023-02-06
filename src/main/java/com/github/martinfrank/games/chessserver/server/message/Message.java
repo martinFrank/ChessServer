@@ -1,12 +1,10 @@
 package com.github.martinfrank.games.chessserver.server.message;
 
 public class Message {
+    public final MessageType msgType;
 
-    private String content;
-    private String msgType;
-
-    public String getMessage(){
-        return "test";
+    public Message (MessageType msgType ){
+        this.msgType = msgType;
     }
 
 }

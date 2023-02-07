@@ -22,6 +22,7 @@ public class MessageParser {
                 case FC_CREATE_GAME: return createFcCreateGameMessage(jsonStr);
                 case FC_SELECT_COLOR: return createFcSelectColorMessage(jsonStr);
                 case FC_START_GAME: return createFcStartGameMessage(jsonStr);
+                case FC_SELECT_FIGURE: return createFcSelectFigureMessage(jsonStr);
 
             }
         }catch (JsonParseException e){
@@ -29,6 +30,10 @@ public class MessageParser {
             LOGGER.debug("Exception: "+e);
         }
         return message;
+    }
+
+    private FcSelectFigureMessage createFcSelectFigureMessage(String jsonStr) {
+        return gson.fromJson(jsonStr, FcSelectFigureMessage.class);
     }
 
     private FcGetOpenGamesMessage createFcGetOpenGamesMessage(String jsonStr) {

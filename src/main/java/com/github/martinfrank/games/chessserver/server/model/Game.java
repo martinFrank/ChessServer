@@ -22,7 +22,7 @@ public class Game {
 
     private long startTime = -1;
 
-    private Board board;
+    public Board board;
     //private List<Move> moveHistory;
 
     public Game(Player hostPlayer) {

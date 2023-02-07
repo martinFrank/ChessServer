@@ -7,6 +7,7 @@ import com.github.martinfrank.games.chessserver.server.handler.GetParticipatingG
 import com.github.martinfrank.games.chessserver.server.handler.LoginHandler;
 import com.github.martinfrank.games.chessserver.server.handler.GetOpenGameHandler;
 import com.github.martinfrank.games.chessserver.server.handler.SelectColorHandler;
+import com.github.martinfrank.games.chessserver.server.handler.SelectFigureHandler;
 import com.github.martinfrank.games.chessserver.server.handler.StartGameHandler;
 import com.github.martinfrank.games.chessserver.server.message.*;
 import com.github.martinfrank.games.chessserver.server.model.ServerAppDataPool;
@@ -52,14 +53,25 @@ public class ChessServerApp implements ServerMessageReceiver {
             }
             case FC_SELECT_COLOR: {
                 handleSelectColor((FcSelectColorMessage) message);
+                break;
             }
             case FC_START_GAME: {
                 handleStartGame((FcStartGameMessage) message);
+                break;
+            }
+            case FC_SELECT_FIGURE: {
+                handleSelectFigure((FcSelectFigureMessage)message);
+                break;
             }
             default: {
                 handleUnknownMessage(clientWorker, raw);
             }
         }
+    }
+
+    private void handleSelectFigure(FcSelectFigureMessage message) {
+        LOGGER.debug("handle FC select figure: " + message);
+        new SelectFigureHandler(serverAppDataPool, message).handle();
     }
 
     private void handleGetOpenGames(FcGetOpenGamesMessage message) {

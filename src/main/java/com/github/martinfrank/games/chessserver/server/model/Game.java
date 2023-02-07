@@ -22,7 +22,7 @@ public class Game {
 
     private long startTime = -1;
 
-    private Board board = new Board();
+    private Board board;
     //private List<Move> moveHistory;
 
     public Game(Player hostPlayer) {
@@ -61,6 +61,7 @@ public class Game {
     public void setStarted(boolean started) {
         isStarted = started;
         currentPlayer = hostPlayer;
+        board = new Board();
         startTime = System.currentTimeMillis();
     }
 

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class Games {
 
@@ -37,5 +38,18 @@ public class Games {
             }
         }
         return null;
+    }
+
+    public List<Game> findOpenGames(int maxAmountOfGames) {
+        List<Game> allOpenGames = games.stream().filter(g -> g.getGuestPlayer() == null).collect(Collectors.toList());
+        if(allOpenGames.size() < maxAmountOfGames){
+            return allOpenGames;
+        }
+        List<Game> result = new ArrayList<>();
+        for(int i = 0; i < maxAmountOfGames; i ++){
+            result.add(allOpenGames.get(i));
+        }
+        return result;
+
     }
 }

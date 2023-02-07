@@ -37,4 +37,8 @@ public class ClientMapping {
         }
         return null;
     }
+
+    public ClientWorker getClientWorker(Player player) {
+        return clientMapping.get(player.playerId);
+    }
 }

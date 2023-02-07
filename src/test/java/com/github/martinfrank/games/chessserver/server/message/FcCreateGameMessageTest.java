@@ -24,7 +24,7 @@ public class FcCreateGameMessageTest {
     }
 
     @Test
-    public void testFsSubmiutCreadtedGame(){
+    public void testFsSubmitCreatedGame(){
         //given
         Player player = new Player(TEST_ID, TEST_NAME);
         Game game = new Game(player);

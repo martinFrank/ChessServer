@@ -16,8 +16,9 @@ public class MessageParser {
         try {
             message = gson.fromJson(jsonStr, Message.class);
             switch (message.msgType){
-                case FC_GET_PARTICIPATING_GAMES: return createFcGetServerInfoMessage(jsonStr);
                 case FC_LOGIN: return createFcLoginMessage(jsonStr);
+                case FC_GET_PARTICIPATING_GAMES: return createFcGetParticipatingGamesMessage(jsonStr);
+                case FC_GET_OPEN_GAMES: return createFcGetOpenGamesMessage(jsonStr);
                 case FC_CREATE_GAME: return createFcCreateGameMessage(jsonStr);
                 case FC_SELECT_COLOR: return createFcSelectColorMessage(jsonStr);
                 case FC_START_GAME: return createFcStartGameMessage(jsonStr);
@@ -28,6 +29,10 @@ public class MessageParser {
             LOGGER.debug("Exception: "+e);
         }
         return message;
+    }
+
+    private FcGetOpenGamesMessage createFcGetOpenGamesMessage(String jsonStr) {
+        return gson.fromJson(jsonStr, FcGetOpenGamesMessage.class);
     }
 
     private FcStartGameMessage createFcStartGameMessage(String jsonStr) {
@@ -46,7 +51,7 @@ public class MessageParser {
         return gson.fromJson(jsonStr, FcLoginMessage.class);
     }
 
-    private FcGetParticipatingGamesMessage createFcGetServerInfoMessage(String jsonStr) {
+    private FcGetParticipatingGamesMessage createFcGetParticipatingGamesMessage(String jsonStr) {
         return gson.fromJson(jsonStr, FcGetParticipatingGamesMessage.class);
     }
 

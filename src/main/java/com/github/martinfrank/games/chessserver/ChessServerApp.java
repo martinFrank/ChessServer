@@ -2,18 +2,20 @@ package com.github.martinfrank.games.chessserver;
 
 //import com.github.martinfrank.games.chessserver.server.ChessServer;
 
+import com.github.martinfrank.games.chessserver.server.handler.CreateGameHandler;
+import com.github.martinfrank.games.chessserver.server.handler.GetParticipatingGamesHandler;
+import com.github.martinfrank.games.chessserver.server.handler.LoginHandler;
+import com.github.martinfrank.games.chessserver.server.handler.GetOpenGameHandler;
+import com.github.martinfrank.games.chessserver.server.handler.SelectColorHandler;
+import com.github.martinfrank.games.chessserver.server.handler.StartGameHandler;
 import com.github.martinfrank.games.chessserver.server.message.*;
-import com.github.martinfrank.games.chessserver.server.model.ClientMapping;
-import com.github.martinfrank.games.chessserver.server.model.Game;
-import com.github.martinfrank.games.chessserver.server.model.Games;
-import com.github.martinfrank.games.chessserver.server.model.Players;
+import com.github.martinfrank.games.chessserver.server.model.ServerAppDataPool;
 import com.github.martinfrank.tcpclientserver.ClientWorker;
 import com.github.martinfrank.tcpclientserver.ServerMessageReceiver;
 import com.github.martinfrank.tcpclientserver.TcpServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -22,15 +24,11 @@ import java.util.UUID;
 public class ChessServerApp implements ServerMessageReceiver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChessServerApp.class);
-    private final Games currentGames = new Games();
-    private final Players currentPlayers = new Players();
-    private final MessageParser messageParser = new MessageParser();
-
-    private final ClientMapping clientMapping = new ClientMapping();
+    private final ServerAppDataPool serverAppDataPool = new ServerAppDataPool();
 
     public void receive(ClientWorker clientWorker, String raw) {
         LOGGER.debug("received raw: " + raw);
-        Message message = messageParser.fromJson(raw);
+        Message message = serverAppDataPool.messageParser.fromJson(raw);
         switch (message.msgType) {
             case UNKNOWN: {
                 handleUnknownMessage(clientWorker, raw);
@@ -41,22 +39,22 @@ public class ChessServerApp implements ServerMessageReceiver {
                 break;
             }
             case FC_GET_PARTICIPATING_GAMES: {
-                handleGetParticipatingGames(clientWorker, (FcGetParticipatingGamesMessage) message);
+                handleGetParticipatingGames((FcGetParticipatingGamesMessage) message);
                 break;
             }
             case FC_GET_OPEN_GAMES:{
-                handleGetOpenGames(clientWorker, (FcGetOpenGamesMessage)message);
+                handleGetOpenGames((FcGetOpenGamesMessage)message);
                 break;
             }
             case FC_CREATE_GAME: {
-                handleCreateGame(clientWorker, (FcCreateGameMessage) message);
+                handleCreateGame((FcCreateGameMessage) message);
                 break;
             }
             case FC_SELECT_COLOR: {
-                handleSelectColor(clientWorker, (FcSelectColorMessage) message);
+                handleSelectColor((FcSelectColorMessage) message);
             }
             case FC_START_GAME: {
-                handleStartGame(clientWorker, (FcStartGameMessage) message);
+                handleStartGame((FcStartGameMessage) message);
             }
             default: {
                 handleUnknownMessage(clientWorker, raw);
@@ -64,101 +62,35 @@ public class ChessServerApp implements ServerMessageReceiver {
         }
     }
 
-    private void handleGetOpenGames(ClientWorker clientWorker, FcGetOpenGamesMessage message) {
+    private void handleGetOpenGames(FcGetOpenGamesMessage message) {
         LOGGER.debug("handle FC get open games: " + message);
-        List<Game> games = currentGames.findOpenGames(10);
-        FsSubmitOpenGamesMessage response = new FsSubmitOpenGamesMessage(games);
-        clientWorker.send(messageParser.toJson(response));
+        new GetOpenGameHandler(serverAppDataPool, message).handle();
     }
 
-    private void handleStartGame(ClientWorker clientWorker, FcStartGameMessage message) {
+    private void handleStartGame(FcStartGameMessage message) {
         LOGGER.debug("handle FC start game: " + message);
-        Game game = currentGames.findById(message.gameId);
-        String reason = getDeclineReasonForStartGame(game, message);
-        if (reason != null) {
-            FsDeclineSelectColorMessage response = new FsDeclineSelectColorMessage(reason);
-            clientWorker.send(messageParser.toJson(response));
-            return;
-        }
-        game.setStarted(true);
-        FsSubmitCreatedGameMessage response = new FsSubmitCreatedGameMessage(game);
-        String jsonResponse = messageParser.toJson(response);
-        clientWorker.send(jsonResponse);
-        sendToGuest(game, jsonResponse);
+        new StartGameHandler(serverAppDataPool, message).handle();
+
     }
 
-    private void sendToGuest(Game game, String jsonResponse) {
-        ClientWorker guestWorker = clientMapping.getClientWorker(game.getGuestPlayer());
-        if (guestWorker != null){
-            guestWorker.send(jsonResponse);
-        }
-    }
-
-    private String getDeclineReasonForStartGame(Game game, FcStartGameMessage message) {
-        if (game == null) {
-            return "start game declined, no game with id " + message.gameId + " found";
-        }
-        if (game.isStarted()) {
-            return "start game declined, game with id " + message.gameId + " is already started";
-        }
-        if (!game.hostPlayer.equals(message.player)) {
-            return "start game declined, you are not host of game with id " + message.gameId;
-        }
-        if(game.getGuestPlayer() == null){
-            return "start game declined, there is no guest in the game with id " + message.gameId;
-        }
-        return null;
-    }
-
-    private void handleSelectColor(ClientWorker clientWorker, FcSelectColorMessage message) {
+    private void handleSelectColor(FcSelectColorMessage message) {
         LOGGER.debug("handle FC select color: " + message);
-        Game game = currentGames.findById(message.gameId);
-        String reason = getDeclineReasonForColorSelect(game, message);
-        if (reason != null) {
-            FsDeclineSelectColorMessage response = new FsDeclineSelectColorMessage(reason);
-            clientWorker.send(messageParser.toJson(response));
-            return;
-        }
-        game.setHostColor(message.desiredColor);
-        String change = "Player " + message.player.playerName + " changed his/her color to " + message.desiredColor;
-        FsSubmitUpdateGameMessage response = new FsSubmitUpdateGameMessage(game, change);
-        String jsonResponse = messageParser.toJson(response);
-        clientWorker.send(jsonResponse);
-        sendToGuest(game, jsonResponse);
+        new SelectColorHandler(serverAppDataPool, message).handle();
     }
 
-    private String getDeclineReasonForColorSelect(Game game, FcSelectColorMessage message) {
-        if (game == null) {
-            return "change color declined, no game with id " + message.gameId + " found";
-        }
-        if (game.isStarted()) {
-            return "change color declined, game with id " + message.gameId + " is already started";
-        }
-        if (!game.hostPlayer.equals(message.player)) {
-            return "change color declined, you are not host of game with id " + message.gameId;
-        }
-        return null;
-    }
-
-    private void handleCreateGame(ClientWorker clientWorker, FcCreateGameMessage message) {
+    private void handleCreateGame(FcCreateGameMessage message) {
         LOGGER.debug("handle FS create game: " + message);
-        Game game = currentGames.createNew(message.player);
-        FsSubmitCreatedGameMessage response = new FsSubmitCreatedGameMessage(game);
-        clientWorker.send(messageParser.toJson(response));
+        new CreateGameHandler(serverAppDataPool, message).handle();
     }
 
     private void handleLogin(ClientWorker clientWorker, FcLoginMessage loginMessage) {
         LOGGER.debug("handle FS Login: " + loginMessage);
-        clientMapping.put(loginMessage.player.playerId, clientWorker);
-        currentPlayers.add(loginMessage.player);
-        clientWorker.send(messageParser.toJson(new FsConfirmLoginMessage()));
+        new LoginHandler(serverAppDataPool, loginMessage, clientWorker).handle();
     }
 
-    private void handleGetParticipatingGames(ClientWorker clientWorker, FcGetParticipatingGamesMessage getServerInfoMessage) {
-        LOGGER.debug("handle FS get participating games : " + getServerInfoMessage);
-        List<Game> participatingGames = currentGames.getParticipatingGames(getServerInfoMessage.player);
-        FsSubmitParticipatingGamesMessage submitServerInfoMessage = new FsSubmitParticipatingGamesMessage(participatingGames);
-        clientWorker.send(messageParser.toJson(submitServerInfoMessage));
+    private void handleGetParticipatingGames(FcGetParticipatingGamesMessage getParticipatingGamesMessage) {
+        LOGGER.debug("handle FS get participating games : " + getParticipatingGamesMessage);
+        new GetParticipatingGamesHandler(serverAppDataPool, getParticipatingGamesMessage).handle();
     }
 
     private void handleUnknownMessage(ClientWorker clientWorker, String raw) {
@@ -168,9 +100,9 @@ public class ChessServerApp implements ServerMessageReceiver {
 
     public void notifyDisconnect(ClientWorker clientWorker) {
         LOGGER.debug("client has disconnected: '" + clientWorker + "'");
-        UUID playerId = clientMapping.getPlayerId(clientWorker);
-        currentPlayers.remove(playerId);
-        clientMapping.remove(clientWorker);
+        UUID playerId = serverAppDataPool.clientMapping.getPlayerId(clientWorker);
+        serverAppDataPool.currentPlayers.remove(playerId);
+        serverAppDataPool.clientMapping.remove(clientWorker);
 
     }
 
@@ -180,7 +112,7 @@ public class ChessServerApp implements ServerMessageReceiver {
 
     public void notifyConnect(ClientWorker clientWorker) {
         LOGGER.debug("new Client connection established, we send a greeting: '" + clientWorker + "'");
-        clientWorker.send(messageParser.toJson(new FsWelcomeMessage()));
+        clientWorker.send(serverAppDataPool.messageParser.toJson(new FsWelcomeMessage()));
     }
 
     public static void main(String[] args) {

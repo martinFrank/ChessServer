@@ -4,8 +4,10 @@ import com.github.martinfrank.games.chessserver.server.model.Player;
 
 public class FcGetOpenGamesMessage extends Message{
 
-    public FcGetOpenGamesMessage() {
+    public final Player player;
+    public FcGetOpenGamesMessage(Player player) {
         super(MessageType.FC_GET_OPEN_GAMES);
+        this.player = player;
     }
 
     @Override

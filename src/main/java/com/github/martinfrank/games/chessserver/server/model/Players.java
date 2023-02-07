@@ -27,4 +27,8 @@ public class Players {
         }
         LOGGER.debug("players.size(): " + players.size());
     }
+
+    public boolean contains(Player player) {
+        return players.contains(player);
+    }
 }

@@ -115,7 +115,6 @@ public class ChessServerApp implements ServerMessageReceiver {
         UUID playerId = serverAppDataPool.clientMapping.getPlayerId(clientWorker);
         serverAppDataPool.currentPlayers.remove(playerId);
         serverAppDataPool.clientMapping.remove(clientWorker);
-
     }
 
     public void notifyUp(String s) {

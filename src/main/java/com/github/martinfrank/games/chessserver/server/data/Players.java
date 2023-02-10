@@ -1,5 +1,6 @@
-package com.github.martinfrank.games.chessserver.server.model;
+package com.github.martinfrank.games.chessserver.server.data;
 
+import com.github.martinfrank.games.chessmodel.model.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

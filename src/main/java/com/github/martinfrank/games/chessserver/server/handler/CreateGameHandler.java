@@ -1,11 +1,10 @@
 package com.github.martinfrank.games.chessserver.server.handler;
 
-import com.github.martinfrank.games.chessserver.server.message.FcCreateGameMessage;
-import com.github.martinfrank.games.chessserver.server.message.FsDeclineCreateGameMessage;
-import com.github.martinfrank.games.chessserver.server.message.FsDeclineSelectColorMessage;
-import com.github.martinfrank.games.chessserver.server.message.FsSubmitCreatedGameMessage;
-import com.github.martinfrank.games.chessserver.server.model.Game;
-import com.github.martinfrank.games.chessserver.server.model.ServerAppDataPool;
+import com.github.martinfrank.games.chessmodel.message.FcCreateGameMessage;
+import com.github.martinfrank.games.chessmodel.message.FsDeclineCreateGameMessage;
+import com.github.martinfrank.games.chessmodel.message.FsSubmitCreatedGameMessage;
+import com.github.martinfrank.games.chessmodel.model.Game;
+import com.github.martinfrank.games.chessserver.server.data.ServerAppDataPool;
 import com.github.martinfrank.tcpclientserver.ClientWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +26,12 @@ public class CreateGameHandler extends AbstractHandler<FcCreateGameMessage>{
 
         String reason = getDeclineReason();
         if (reason != null) {
+            LOGGER.warn("declining reason = "+reason);
             FsDeclineCreateGameMessage response = new FsDeclineCreateGameMessage(reason);
             clientWorker.send(serverAppDataPool.messageParser.toJson(response));
             return;
         }
-        Game game = serverAppDataPool.currentGames.createNew(message.player);
+        Game game = serverAppDataPool.currentGames.createGame(message.player);
         FsSubmitCreatedGameMessage response = new FsSubmitCreatedGameMessage(game);
         clientWorker.send(serverAppDataPool.messageParser.toJson(response));
     }

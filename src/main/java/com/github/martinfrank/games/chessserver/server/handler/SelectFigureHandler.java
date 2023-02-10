@@ -1,12 +1,12 @@
 package com.github.martinfrank.games.chessserver.server.handler;
 
-import com.github.martinfrank.games.chessserver.server.message.FcSelectFigureMessage;
-import com.github.martinfrank.games.chessserver.server.message.FsDeclineSelectFigureMessage;
-import com.github.martinfrank.games.chessserver.server.message.FsSubmitSelectFigureMessage;
-import com.github.martinfrank.games.chessserver.server.model.Game;
-import com.github.martinfrank.games.chessserver.server.model.ServerAppDataPool;
-import com.github.martinfrank.games.chessserver.server.model.chess.Field;
-import com.github.martinfrank.games.chessserver.server.model.chess.Figure;
+import com.github.martinfrank.games.chessmodel.message.FcSelectFigureMessage;
+import com.github.martinfrank.games.chessmodel.message.FsDeclineSelectFigureMessage;
+import com.github.martinfrank.games.chessmodel.message.FsSubmitSelectFigureMessage;
+import com.github.martinfrank.games.chessmodel.model.Game;
+import com.github.martinfrank.games.chessmodel.model.chess.Field;
+import com.github.martinfrank.games.chessmodel.model.chess.Figure;
+import com.github.martinfrank.games.chessserver.server.data.ServerAppDataPool;
 import com.github.martinfrank.tcpclientserver.ClientWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +30,7 @@ public class SelectFigureHandler extends AbstractHandler<FcSelectFigureMessage> 
         Game game = serverAppDataPool.currentGames.findById(message.gameId);
         String reason = getDeclineReason(game, message);
         if (reason != null) {
+            LOGGER.warn("declining reason = "+reason);
             FsDeclineSelectFigureMessage response = new FsDeclineSelectFigureMessage(reason);
             clientWorker.send(serverAppDataPool.messageParser.toJson(response));
             return;

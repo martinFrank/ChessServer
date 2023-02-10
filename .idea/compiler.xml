@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="ChessServer" />
         <module name="tcpclientserver" />
+        <module name="ChessGameModel" />
       </profile>
     </annotationProcessing>
   </component>

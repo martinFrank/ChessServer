@@ -1,10 +1,10 @@
 package com.github.martinfrank.games.chessserver.server.handler;
 
-import com.github.martinfrank.games.chessserver.server.message.FcGetParticipatingGamesMessage;
-import com.github.martinfrank.games.chessserver.server.message.FsDeclineParticipatingGamesMessage;
-import com.github.martinfrank.games.chessserver.server.message.FsSubmitParticipatingGamesMessage;
-import com.github.martinfrank.games.chessserver.server.model.Game;
-import com.github.martinfrank.games.chessserver.server.model.ServerAppDataPool;
+import com.github.martinfrank.games.chessmodel.message.FcGetParticipatingGamesMessage;
+import com.github.martinfrank.games.chessmodel.message.FsDeclineParticipatingGamesMessage;
+import com.github.martinfrank.games.chessmodel.message.FsSubmitParticipatingGamesMessage;
+import com.github.martinfrank.games.chessmodel.model.Game;
+import com.github.martinfrank.games.chessserver.server.data.ServerAppDataPool;
 import com.github.martinfrank.tcpclientserver.ClientWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,8 @@ public class GetParticipatingGamesHandler extends AbstractHandler<FcGetParticipa
             return;
         }
         String declineReason = getDeclinedReason();
-        if(declineReason == null){
+        if(declineReason != null){
+            LOGGER.warn("declining reason = "+declineReason);
             FsDeclineParticipatingGamesMessage decline = new FsDeclineParticipatingGamesMessage(declineReason);
             clientWorker.send(serverAppDataPool.messageParser.toJson(decline));
             return;

@@ -1,9 +1,9 @@
 package com.github.martinfrank.games.chessserver.server.handler;
 
-import com.github.martinfrank.games.chessserver.server.message.Message;
-import com.github.martinfrank.games.chessserver.server.model.Game;
-import com.github.martinfrank.games.chessserver.server.model.Player;
-import com.github.martinfrank.games.chessserver.server.model.ServerAppDataPool;
+import com.github.martinfrank.games.chessmodel.message.Message;
+import com.github.martinfrank.games.chessmodel.model.Game;
+import com.github.martinfrank.games.chessmodel.model.Player;
+import com.github.martinfrank.games.chessserver.server.data.ServerAppDataPool;
 import com.github.martinfrank.tcpclientserver.ClientWorker;
 
 public class AbstractHandler <T extends Message> {
@@ -36,4 +36,5 @@ public class AbstractHandler <T extends Message> {
             otherWorker.send(jsonResponse);
         }
     }
+
 }

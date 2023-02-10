@@ -1,5 +1,7 @@
-package com.github.martinfrank.games.chessserver.server.model;
+package com.github.martinfrank.games.chessserver.server.data;
 
+import com.github.martinfrank.games.chessmodel.model.Game;
+import com.github.martinfrank.games.chessmodel.model.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +26,8 @@ public class Games {
         return participatingGames;
     }
 
-    public Game createNew(Player player) {
-        Game game = new Game(player);
+    public Game createGame(Player player) {
+        Game game = new Game(UUID.randomUUID(), player);
         games.add(game);
         LOGGER.debug("games.size() = "+games.size());
         return game;

@@ -1,8 +1,8 @@
 package com.github.martinfrank.games.chessserver.server.handler;
 
-import com.github.martinfrank.games.chessserver.server.message.FcLoginMessage;
-import com.github.martinfrank.games.chessserver.server.message.FsConfirmLoginMessage;
-import com.github.martinfrank.games.chessserver.server.model.ServerAppDataPool;
+import com.github.martinfrank.games.chessmodel.message.FcLoginMessage;
+import com.github.martinfrank.games.chessmodel.message.FsConfirmLoginMessage;
+import com.github.martinfrank.games.chessserver.server.data.ServerAppDataPool;
 import com.github.martinfrank.tcpclientserver.ClientWorker;
 
 public class LoginHandler extends AbstractHandler<FcLoginMessage>{

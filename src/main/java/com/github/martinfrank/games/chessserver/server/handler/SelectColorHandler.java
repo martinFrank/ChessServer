@@ -1,11 +1,10 @@
 package com.github.martinfrank.games.chessserver.server.handler;
 
-import com.github.martinfrank.games.chessserver.server.message.FcSelectColorMessage;
-import com.github.martinfrank.games.chessserver.server.message.FsDeclineSelectColorMessage;
-import com.github.martinfrank.games.chessserver.server.message.FsSubmitSelectColorMessage;
-import com.github.martinfrank.games.chessserver.server.message.FsSubmitUpdateGameMessage;
-import com.github.martinfrank.games.chessserver.server.model.Game;
-import com.github.martinfrank.games.chessserver.server.model.ServerAppDataPool;
+import com.github.martinfrank.games.chessmodel.message.FcSelectColorMessage;
+import com.github.martinfrank.games.chessmodel.message.FsDeclineSelectColorMessage;
+import com.github.martinfrank.games.chessmodel.message.FsSubmitSelectColorMessage;
+import com.github.martinfrank.games.chessmodel.model.Game;
+import com.github.martinfrank.games.chessserver.server.data.ServerAppDataPool;
 import com.github.martinfrank.tcpclientserver.ClientWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +25,7 @@ public class SelectColorHandler extends AbstractHandler<FcSelectColorMessage> {
         Game game = serverAppDataPool.currentGames.findById(message.gameId);
         String reason = getDeclineReason(game, message);
         if (reason != null) {
+            LOGGER.warn("declining reason = "+reason);
             FsDeclineSelectColorMessage response = new FsDeclineSelectColorMessage(reason);
             clientWorker.send(serverAppDataPool.messageParser.toJson(response));
             return;

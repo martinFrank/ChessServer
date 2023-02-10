@@ -1,4 +1,4 @@
-package com.github.martinfrank.games.chessserver.server.model.chess;
+package com.github.martinfrank.games.chessserver.server.data.chess;
 
 import org.junit.Test;
 

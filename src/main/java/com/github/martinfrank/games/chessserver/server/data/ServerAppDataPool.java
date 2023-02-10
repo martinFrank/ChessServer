@@ -1,6 +1,6 @@
-package com.github.martinfrank.games.chessserver.server.model;
+package com.github.martinfrank.games.chessserver.server.data;
 
-import com.github.martinfrank.games.chessserver.server.message.MessageParser;
+import com.github.martinfrank.games.chessmodel.message.MessageParser;
 
 public class ServerAppDataPool {
 

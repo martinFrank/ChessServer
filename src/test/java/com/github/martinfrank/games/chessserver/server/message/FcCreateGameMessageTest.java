@@ -1,7 +1,10 @@
 package com.github.martinfrank.games.chessserver.server.message;
 
-import com.github.martinfrank.games.chessserver.server.model.Game;
-import com.github.martinfrank.games.chessserver.server.model.Player;
+import com.github.martinfrank.games.chessmodel.message.FcCreateGameMessage;
+import com.github.martinfrank.games.chessmodel.message.FsSubmitCreatedGameMessage;
+import com.github.martinfrank.games.chessmodel.message.MessageParser;
+import com.github.martinfrank.games.chessmodel.model.Game;
+import com.github.martinfrank.games.chessmodel.model.Player;
 import org.junit.Test;
 
 import java.util.UUID;

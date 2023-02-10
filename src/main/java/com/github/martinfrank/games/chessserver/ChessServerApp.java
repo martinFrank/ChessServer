@@ -2,6 +2,7 @@ package com.github.martinfrank.games.chessserver;
 
 //import com.github.martinfrank.games.chessserver.server.ChessServer;
 
+import com.github.martinfrank.games.chessserver.server.handler.AbstractHandler;
 import com.github.martinfrank.games.chessserver.server.handler.CreateGameHandler;
 import com.github.martinfrank.games.chessserver.server.handler.GetParticipatingGamesHandler;
 import com.github.martinfrank.games.chessserver.server.handler.LoginHandler;
@@ -9,14 +10,17 @@ import com.github.martinfrank.games.chessserver.server.handler.GetOpenGameHandle
 import com.github.martinfrank.games.chessserver.server.handler.SelectColorHandler;
 import com.github.martinfrank.games.chessserver.server.handler.SelectFigureHandler;
 import com.github.martinfrank.games.chessserver.server.handler.StartGameHandler;
-import com.github.martinfrank.games.chessserver.server.message.*;
-import com.github.martinfrank.games.chessserver.server.model.ServerAppDataPool;
+import com.github.martinfrank.games.chessmodel.message.*;
+import com.github.martinfrank.games.chessserver.server.data.ServerAppDataPool;
 import com.github.martinfrank.tcpclientserver.ClientWorker;
 import com.github.martinfrank.tcpclientserver.ServerMessageReceiver;
 import com.github.martinfrank.tcpclientserver.TcpServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 /**

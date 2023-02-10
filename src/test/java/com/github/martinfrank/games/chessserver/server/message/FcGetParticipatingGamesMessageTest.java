@@ -1,6 +1,10 @@
 package com.github.martinfrank.games.chessserver.server.message;
 
-import com.github.martinfrank.games.chessserver.server.model.Player;
+import com.github.martinfrank.games.chessmodel.message.FcGetParticipatingGamesMessage;
+import com.github.martinfrank.games.chessmodel.message.Message;
+import com.github.martinfrank.games.chessmodel.message.MessageParser;
+import com.github.martinfrank.games.chessmodel.message.MessageType;
+import com.github.martinfrank.games.chessmodel.model.Player;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -25,7 +29,7 @@ public class FcGetParticipatingGamesMessageTest {
         //then
         Assert.assertTrue(json.contains("\"playerName\":\"testName\""));
         Assert.assertTrue(json.contains("\"playerId\":\"f62b659a-30ae-465b-8765-0096519dee70\""));
-        Assert.assertTrue(json.contains("\"msgType\":\""+MessageType.FC_GET_PARTICIPATING_GAMES.typeString+"\""));
+        Assert.assertTrue(json.contains("\"msgType\":\""+ MessageType.FC_GET_PARTICIPATING_GAMES.typeString+"\""));
     }
 
     @Test

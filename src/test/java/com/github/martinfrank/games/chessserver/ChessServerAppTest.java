@@ -33,6 +33,6 @@ public class ChessServerAppTest extends TestCase {
     public void testApp() {
         assertTrue(true);
         ChessServerApp app = new ChessServerApp();
-        TcpServer mock = mock(TcpServer.class);
+//        TcpServer mock = mock(TcpServer.class);
     }
 }

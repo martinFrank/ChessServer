@@ -21,11 +21,11 @@ public class FsSubmitParticipatingGamesTest {
     public void testFsSubmitServerInfoMessageToJson(){
         Player aPlayer = new Player(TEST_ID_A, TEST_NAME_A);
         Player bPlayer = new Player(TEST_ID_B, TEST_NAME_B);
-        Game aGame = new Game(aPlayer); //offenes
-        Game bGame = new Game(aPlayer); //mit teilnehmer b
+        Game aGame = new Game(UUID.randomUUID(), aPlayer); //offenes
+        Game bGame = new Game(UUID.randomUUID(), aPlayer); //mit teilnehmer b
         bGame.setGuestPlayer(bPlayer);
-        Game cGame = new Game(bPlayer); //offenes
-        Game dGame = new Game(bPlayer); //mit Teilnehmer a
+        Game cGame = new Game(UUID.randomUUID(), bPlayer); //offenes
+        Game dGame = new Game(UUID.randomUUID(), bPlayer); //mit Teilnehmer a
         dGame.setGuestPlayer(aPlayer);
         List<Game> games = Arrays.asList(aGame, bGame, cGame);
 

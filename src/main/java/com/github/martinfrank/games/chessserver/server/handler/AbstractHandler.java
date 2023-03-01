@@ -5,16 +5,19 @@ import com.github.martinfrank.games.chessmodel.model.Game;
 import com.github.martinfrank.games.chessmodel.model.Player;
 import com.github.martinfrank.games.chessserver.server.data.ServerAppDataPool;
 import com.github.martinfrank.tcpclientserver.ClientWorker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class AbstractHandler <T extends Message> {
+public abstract class AbstractHandler<T extends Message> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractHandler.class);
     final ServerAppDataPool serverAppDataPool;
-    final T message;
 
-    public AbstractHandler(ServerAppDataPool serverAppDataPool, T message) {
+    public AbstractHandler(ServerAppDataPool serverAppDataPool) {
         this.serverAppDataPool = serverAppDataPool;
-        this.message = message;
     }
+
+    public abstract void handle(ClientWorker clientWorker,  T message);
 
     public void sendToGuest(Game game, String jsonResponse) {
         ClientWorker guestWorker = serverAppDataPool.clientMapping.getClientWorker(game.getGuestPlayer());
@@ -32,9 +35,11 @@ public class AbstractHandler <T extends Message> {
             other = game.hostPlayer;
         }
         ClientWorker otherWorker = serverAppDataPool.clientMapping.getClientWorker(other);
-        if (otherWorker != null){
-            otherWorker.send(jsonResponse);
+        if (otherWorker == null){
+            LOGGER.warn("could not find other participant from game");
+            return;
         }
+        otherWorker.send(jsonResponse);
     }
 
 }

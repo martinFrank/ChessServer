@@ -1,3 +1,10 @@
-{"player":{"playerId":"f62b659a-30ae-465b-8765-0096519dee70","playerName":"testName"},"msgType":"FC_LOGIN","version":1}
+login:          {"player":{"playerId":"f62b659a-30ae-465b-8765-0096519dee70","playerName":"testName"},"msgType":"FC_LOGIN","version":1}
 {"player":{"playerId":"f62b659a-30ae-465b-8765-0096519dee70","playerName":"testName"},"msgType":"FC_GET_PARTICIPATING_GAMES","version":1}
 {"player":{"playerId":"f62b659a-30ae-465b-8765-0096519dee70","playerName":"testName"},"msgType":"FC_CREATE_GAME","version":1}
+get open games: {"player":{"playerId":"f62b659a-30ae-465b-8765-0096519dee70","playerName":"Player"},"msgType":"FC_GET_OPEN_GAMES","version":1}
+join open game: {"game":{"gameId":"dffe4c51-6913-426c-90b0-89523aa43b41","hostPlayer":{"playerId":"ad53a318-7371-448e-a901-00643a86d834","playerName":"Player"},"hostColor":"WHITE","guestColor":"BLACK","isStarted":false,"isHostOnline":true,"isGuestOnline":false,"startTime":-1},"player":{"playerId":"f62b659a-30ae-465b-8765-0096519dee70","playerName":"testName"}, "msgType":"FC_JOIN_GAME","version":1}
+
+
+FC_LOGIN
+FC_CREATE_GAME
+FC_GET_OPEN_GAMES

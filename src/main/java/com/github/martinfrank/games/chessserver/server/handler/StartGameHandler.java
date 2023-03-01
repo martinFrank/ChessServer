@@ -13,12 +13,11 @@ public class StartGameHandler extends AbstractHandler<FcStartGameMessage> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StartGameHandler.class);
 
-    public StartGameHandler(ServerAppDataPool serverAppDataPool, FcStartGameMessage message) {
-        super(serverAppDataPool, message);
+    public StartGameHandler(ServerAppDataPool serverAppDataPool) {
+        super(serverAppDataPool);
     }
 
-    public void handle() {
-        ClientWorker clientWorker = serverAppDataPool.clientMapping.getClientWorker(message.player);
+    public void handle(ClientWorker clientWorker, FcStartGameMessage message) {
         if(clientWorker == null){
             LOGGER.warn("could not find matching client worker");
             return;
@@ -31,7 +30,7 @@ public class StartGameHandler extends AbstractHandler<FcStartGameMessage> {
             clientWorker.send(serverAppDataPool.messageParser.toJson(response));
             return;
         }
-        game.setStarted(true);
+        game.gameContent.setStarted(true);
         FsSubmitCreatedGameMessage response = new FsSubmitCreatedGameMessage(game);
         String jsonResponse = serverAppDataPool.messageParser.toJson(response);
         clientWorker.send(jsonResponse);
@@ -45,7 +44,7 @@ public class StartGameHandler extends AbstractHandler<FcStartGameMessage> {
         if (game == null) {
             return "start game declined, no game with id " + message.gameId + " found";
         }
-        if (game.isStarted()) {
+        if (game.gameContent.isStarted()) {
             return "start game declined, game with id " + message.gameId + " is already started";
         }
         if (!game.hostPlayer.equals(message.player)) {

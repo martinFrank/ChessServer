@@ -30,12 +30,12 @@ public class FcCreateGameMessageTest {
     public void testFsSubmitCreatedGame(){
         //given
         Player player = new Player(TEST_ID, TEST_NAME);
-        Game game = new Game(player);
+        Game game = new Game(UUID.randomUUID(), player);
         FsSubmitCreatedGameMessage message = new FsSubmitCreatedGameMessage(game);
         MessageParser messageParser = new MessageParser();
 
         //when
-        game.setHostOnline(true);
+        game.gameContent.setHostOnline(true);
         String jsonString = messageParser.toJson(message);
         System.out.println(jsonString);
     }

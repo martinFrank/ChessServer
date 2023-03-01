@@ -15,7 +15,9 @@ public class Players {
     private final List<Player> players = new ArrayList<>();
 
     public void add(Player player) {
-        players.add(player);
+        if(!players.contains(player)){
+            players.add(player);
+        }
         LOGGER.debug("players.size(): " + players.size());
     }
 
@@ -31,5 +33,9 @@ public class Players {
 
     public boolean contains(Player player) {
         return players.contains(player);
+    }
+
+    public List<Player> getAll() {
+        return players;
     }
 }

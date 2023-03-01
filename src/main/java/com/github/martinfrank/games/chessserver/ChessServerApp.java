@@ -1,26 +1,32 @@
 package com.github.martinfrank.games.chessserver;
 
-//import com.github.martinfrank.games.chessserver.server.ChessServer;
-
-import com.github.martinfrank.games.chessserver.server.handler.AbstractHandler;
+import com.github.martinfrank.games.chessmodel.message.FcCreateGameMessage;
+import com.github.martinfrank.games.chessmodel.message.FcGetGameContentMessage;
+import com.github.martinfrank.games.chessmodel.message.FcGetOpenGamesMessage;
+import com.github.martinfrank.games.chessmodel.message.FcGetParticipatingGamesMessage;
+import com.github.martinfrank.games.chessmodel.message.FcJoinGameMessage;
+import com.github.martinfrank.games.chessmodel.message.FcLoginMessage;
+import com.github.martinfrank.games.chessmodel.message.FcSelectColorMessage;
+import com.github.martinfrank.games.chessmodel.message.FcSelectFigureMessage;
+import com.github.martinfrank.games.chessmodel.message.FcStartGameMessage;
+import com.github.martinfrank.games.chessmodel.message.FsWelcomeMessage;
+import com.github.martinfrank.games.chessmodel.message.Message;
+import com.github.martinfrank.games.chessserver.server.data.ServerAppDataPool;
 import com.github.martinfrank.games.chessserver.server.handler.CreateGameHandler;
-import com.github.martinfrank.games.chessserver.server.handler.GetParticipatingGamesHandler;
-import com.github.martinfrank.games.chessserver.server.handler.LoginHandler;
+import com.github.martinfrank.games.chessserver.server.handler.GameContentHandler;
 import com.github.martinfrank.games.chessserver.server.handler.GetOpenGameHandler;
+import com.github.martinfrank.games.chessserver.server.handler.GetParticipatingGamesHandler;
+import com.github.martinfrank.games.chessserver.server.handler.JoinGameHandler;
+import com.github.martinfrank.games.chessserver.server.handler.LoginHandler;
 import com.github.martinfrank.games.chessserver.server.handler.SelectColorHandler;
 import com.github.martinfrank.games.chessserver.server.handler.SelectFigureHandler;
 import com.github.martinfrank.games.chessserver.server.handler.StartGameHandler;
-import com.github.martinfrank.games.chessmodel.message.*;
-import com.github.martinfrank.games.chessserver.server.data.ServerAppDataPool;
 import com.github.martinfrank.tcpclientserver.ClientWorker;
 import com.github.martinfrank.tcpclientserver.ServerMessageReceiver;
 import com.github.martinfrank.tcpclientserver.TcpServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -35,78 +41,60 @@ public class ChessServerApp implements ServerMessageReceiver {
         LOGGER.debug("received raw: " + raw);
         Message message = serverAppDataPool.messageParser.fromJson(raw);
         switch (message.msgType) {
-            case UNKNOWN: {
-                handleUnknownMessage(clientWorker, raw);
-                break;
-            }
+//            case UNKNOWN: {
+//                handleUnknownMessage(clientWorker, raw);
+//                break;
+//            }
             case FC_LOGIN: {
-                handleLogin(clientWorker, (FcLoginMessage) message);
+                LOGGER.debug("handle FS Login: " + message);
+                new LoginHandler(serverAppDataPool).handle(clientWorker, (FcLoginMessage) message);
                 break;
             }
             case FC_GET_PARTICIPATING_GAMES: {
-                handleGetParticipatingGames((FcGetParticipatingGamesMessage) message);
+                LOGGER.debug("handle FS get participating games : " + message);
+                new GetParticipatingGamesHandler(serverAppDataPool).handle(clientWorker, (FcGetParticipatingGamesMessage) message);
                 break;
             }
             case FC_GET_OPEN_GAMES:{
-                handleGetOpenGames((FcGetOpenGamesMessage)message);
+                LOGGER.debug("handle FC select figure: " + message);
+                new GetOpenGameHandler(serverAppDataPool).handle(clientWorker, (FcGetOpenGamesMessage) message);
                 break;
             }
             case FC_CREATE_GAME: {
-                handleCreateGame((FcCreateGameMessage) message);
+                LOGGER.debug("handle FS create game: " + message);
+                new CreateGameHandler(serverAppDataPool).handle(clientWorker, (FcCreateGameMessage) message);
                 break;
             }
             case FC_SELECT_COLOR: {
-                handleSelectColor((FcSelectColorMessage) message);
+                LOGGER.debug("handle FC select color: " + message);
+                new SelectColorHandler(serverAppDataPool).handle(clientWorker, (FcSelectColorMessage) message);
                 break;
             }
             case FC_START_GAME: {
-                handleStartGame((FcStartGameMessage) message);
+                LOGGER.debug("handle FC start game: " + message);
+                new StartGameHandler(serverAppDataPool).handle(clientWorker, (FcStartGameMessage) message);
                 break;
             }
             case FC_SELECT_FIGURE: {
-                handleSelectFigure((FcSelectFigureMessage)message);
+                LOGGER.debug("handle FC select figure: " + message);
+                new SelectFigureHandler(serverAppDataPool).handle(clientWorker, (FcSelectFigureMessage)message);
                 break;
             }
+            case FC_JOIN_GAME:{
+                LOGGER.debug("handle FC join game: " + message);
+                new JoinGameHandler(serverAppDataPool).handle(clientWorker, (FcJoinGameMessage)message);
+                break;
+            }
+            case FC_GET_GAME_CONTENT:{
+                LOGGER.debug("handle FC get game content: " + message);
+                new GameContentHandler(serverAppDataPool).handle(clientWorker, (FcGetGameContentMessage)message);
+                break;
+            }
+
             default: {
                 handleUnknownMessage(clientWorker, raw);
             }
         }
-    }
-
-    private void handleSelectFigure(FcSelectFigureMessage message) {
-        LOGGER.debug("handle FC select figure: " + message);
-        new SelectFigureHandler(serverAppDataPool, message).handle();
-    }
-
-    private void handleGetOpenGames(FcGetOpenGamesMessage message) {
-        LOGGER.debug("handle FC get open games: " + message);
-        new GetOpenGameHandler(serverAppDataPool, message).handle();
-    }
-
-    private void handleStartGame(FcStartGameMessage message) {
-        LOGGER.debug("handle FC start game: " + message);
-        new StartGameHandler(serverAppDataPool, message).handle();
-
-    }
-
-    private void handleSelectColor(FcSelectColorMessage message) {
-        LOGGER.debug("handle FC select color: " + message);
-        new SelectColorHandler(serverAppDataPool, message).handle();
-    }
-
-    private void handleCreateGame(FcCreateGameMessage message) {
-        LOGGER.debug("handle FS create game: " + message);
-        new CreateGameHandler(serverAppDataPool, message).handle();
-    }
-
-    private void handleLogin(ClientWorker clientWorker, FcLoginMessage loginMessage) {
-        LOGGER.debug("handle FS Login: " + loginMessage);
-        new LoginHandler(serverAppDataPool, loginMessage, clientWorker).handle();
-    }
-
-    private void handleGetParticipatingGames(FcGetParticipatingGamesMessage getParticipatingGamesMessage) {
-        LOGGER.debug("handle FS get participating games : " + getParticipatingGamesMessage);
-        new GetParticipatingGamesHandler(serverAppDataPool, getParticipatingGamesMessage).handle();
     }
 
     private void handleUnknownMessage(ClientWorker clientWorker, String raw) {

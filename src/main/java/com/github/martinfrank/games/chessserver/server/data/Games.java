@@ -13,17 +13,19 @@ import java.util.stream.Collectors;
 public class Games {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Games.class);
+    private static final int DEFAULT_LIMIT = 5;
 
     private final List<Game> games = new ArrayList<>();
 
     public List<Game> getParticipatingGames(Player player) {
-        List<Game> participatingGames = new ArrayList<>();
-        for(Game game: games){
-            if(player.equals(game.hostPlayer) || player.equals(game.getGuestPlayer())){
-                participatingGames.add(game);
-            }
-        }
-        return participatingGames;
+        return getParticipatingGames(player, DEFAULT_LIMIT);
+    }
+
+    public List<Game> getParticipatingGames(Player player, int maxAmountOfGames ) {
+        return games.stream()
+                .filter(game -> game.isParticipant(player))
+                .limit(maxAmountOfGames)
+                .collect(Collectors.toList());
     }
 
     public Game createGame(Player player) {
@@ -34,24 +36,21 @@ public class Games {
     }
 
     public Game findById(UUID gameId) {
-        for(Game game: games){
-            if(game.gameId.equals(gameId)){
-                return game;
-            }
-        }
-        return null;
+        return games.stream()
+                .filter(g->g.gameId.equals(gameId))
+                .findAny()
+                .orElse(null);
+    }
+
+    public List<Game> findOpenGames() {
+        return findOpenGames(DEFAULT_LIMIT);
     }
 
     public List<Game> findOpenGames(int maxAmountOfGames) {
-        List<Game> allOpenGames = games.stream().filter(g -> g.getGuestPlayer() == null).collect(Collectors.toList());
-        if(allOpenGames.size() < maxAmountOfGames){
-            return allOpenGames;
-        }
-        List<Game> result = new ArrayList<>();
-        for(int i = 0; i < maxAmountOfGames; i ++){
-            result.add(allOpenGames.get(i));
-        }
-        return result;
+        return games.stream()
+                .filter(g -> g.getGuestPlayer() == null)
+                .limit(maxAmountOfGames)
+                .collect(Collectors.toList());
 
     }
 }

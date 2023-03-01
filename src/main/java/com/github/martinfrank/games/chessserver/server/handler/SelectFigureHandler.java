@@ -17,12 +17,11 @@ public class SelectFigureHandler extends AbstractHandler<FcSelectFigureMessage> 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SelectFigureHandler.class);
 
-    public SelectFigureHandler(ServerAppDataPool serverAppDataPool, FcSelectFigureMessage message) {
-        super(serverAppDataPool, message);
+    public SelectFigureHandler(ServerAppDataPool serverAppDataPool) {
+        super(serverAppDataPool);
     }
 
-    public void handle() {
-        ClientWorker clientWorker = serverAppDataPool.clientMapping.getClientWorker(message.player);
+    public void handle(ClientWorker clientWorker, FcSelectFigureMessage message) {
         if(clientWorker == null){
             LOGGER.warn("could not find matching client worker");
             return;
@@ -35,8 +34,8 @@ public class SelectFigureHandler extends AbstractHandler<FcSelectFigureMessage> 
             clientWorker.send(serverAppDataPool.messageParser.toJson(response));
             return;
         }
-        Figure figure = game.board.findFigure(message.field);
-        List<Field> path = game.board.getPath(message.field);
+        Figure figure = game.gameContent.board.findFigure(message.field);
+        List<Field> path = game.gameContent.board.getPath(message.field);
         FsSubmitSelectFigureMessage submitServerInfoMessage = new FsSubmitSelectFigureMessage(game, figure, message.field, path);
         String json = serverAppDataPool.messageParser.toJson(submitServerInfoMessage);
         clientWorker.send(json);
@@ -52,10 +51,10 @@ public class SelectFigureHandler extends AbstractHandler<FcSelectFigureMessage> 
         if(!game.hostPlayer.equals(message.player) || !game.getGuestPlayer().equals(message.player)){
             return "you are not part of this game";
         }
-        if(!game.isStarted() ){
+        if(!game.gameContent.isStarted() ){
             return "the game is not started yet";
         }
-        if(game.board.findFigure(message.field) == null){
+        if(game.gameContent.board.findFigure(message.field) == null){
             return "there is no figure on that field";
         }
         return null;

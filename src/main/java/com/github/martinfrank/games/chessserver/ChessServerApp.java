@@ -40,6 +40,8 @@ public class ChessServerApp implements ServerMessageReceiver {
     public void receive(ClientWorker clientWorker, String raw) {
         LOGGER.debug("received raw: " + raw);
         Message message = serverAppDataPool.messageParser.fromJson(raw);
+        debugData();
+        //test
         switch (message.msgType) {
 //            case UNKNOWN: {
 //                handleUnknownMessage(clientWorker, raw);
@@ -95,6 +97,10 @@ public class ChessServerApp implements ServerMessageReceiver {
                 handleUnknownMessage(clientWorker, raw);
             }
         }
+    }
+
+    private void debugData() {
+        LOGGER.debug("games.size: "+serverAppDataPool.currentGames.toString());
     }
 
     private void handleUnknownMessage(ClientWorker clientWorker, String raw) {

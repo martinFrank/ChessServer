@@ -48,9 +48,16 @@ public class Games {
 
     public List<Game> findOpenGames(int maxAmountOfGames) {
         return games.stream()
-                .filter(g -> g.getGuestPlayer() == null)
+//                .filter(g -> g.getGuestPlayer() == null)
                 .limit(maxAmountOfGames)
                 .collect(Collectors.toList());
 
+    }
+
+    @Override
+    public String toString() {
+        return "Games{" +
+                "games.size=" + games.size() +
+                '}';
     }
 }

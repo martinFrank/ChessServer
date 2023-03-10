@@ -1,10 +1,10 @@
 package com.github.martinfrank.games.chessserver.server.handler;
 
-import com.github.martinfrank.games.chessmodel.message.FcSelectColorMessage;
-import com.github.martinfrank.games.chessmodel.message.FsDeclineSelectColorMessage;
-import com.github.martinfrank.games.chessmodel.message.FsSubmitSelectColorMessage;
+import com.github.martinfrank.games.chessmodel.message.selectColor.FcSelectColorMessage;
+import com.github.martinfrank.games.chessmodel.message.selectColor.FsDeclineSelectColorMessage;
+import com.github.martinfrank.games.chessmodel.message.selectColor.FsSubmitSelectColorMessage;
 import com.github.martinfrank.games.chessmodel.model.Game;
-import com.github.martinfrank.games.chessserver.server.data.ServerAppDataPool;
+import com.github.martinfrank.games.chessserver.server.data.DataPool;
 import com.github.martinfrank.tcpclientserver.ClientWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 public class SelectColorHandler extends AbstractHandler<FcSelectColorMessage> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SelectColorHandler.class);
-    public SelectColorHandler(ServerAppDataPool serverAppDataPool) {
-        super(serverAppDataPool);
+    public SelectColorHandler(DataPool dataPool) {
+        super(dataPool);
     }
 
     @Override
@@ -22,24 +22,24 @@ public class SelectColorHandler extends AbstractHandler<FcSelectColorMessage> {
             LOGGER.warn("could not find matching client worker");
             return;
         }
-        Game game = serverAppDataPool.currentGames.findById(message.gameId);
+        Game game = dataPool.currentGames.findById(message.gameId);
         String reason = getDeclineReason(game, message);
         if (reason != null) {
             LOGGER.warn("declining reason = "+reason);
             FsDeclineSelectColorMessage response = new FsDeclineSelectColorMessage(reason);
-            clientWorker.send(serverAppDataPool.messageParser.toJson(response));
+            clientWorker.send(dataPool.messageParser.toJson(response));
             return;
         }
         game.gameContent.setHostColor(message.desiredColor);
         String change = "Player " + message.player.playerName + " changed his/her color to " + message.desiredColor;
         FsSubmitSelectColorMessage response = new FsSubmitSelectColorMessage(game, change);
-        String jsonResponse = serverAppDataPool.messageParser.toJson(response);
+        String jsonResponse = dataPool.messageParser.toJson(response);
         clientWorker.send(jsonResponse);
         sendToGuest(game, jsonResponse);
     }
 
     private String getDeclineReason(Game game, FcSelectColorMessage message) {
-        if (!serverAppDataPool.currentPlayers.contains(message.player)){
+        if (!dataPool.currentPlayers.contains(message.player)){
             return "you are not logged in";
         }
         if (game == null) {

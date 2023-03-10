@@ -1,11 +1,11 @@
 package com.github.martinfrank.games.chessserver.server.handler;
 
-import com.github.martinfrank.games.chessmodel.message.FcGetParticipatingGamesMessage;
-import com.github.martinfrank.games.chessmodel.message.FsDeclineParticipatingGamesMessage;
-import com.github.martinfrank.games.chessmodel.message.FsSubmitParticipatingGamesMessage;
+import com.github.martinfrank.games.chessmodel.message.getparticipatinggames.FcGetParticipatingGamesMessage;
+import com.github.martinfrank.games.chessmodel.message.getparticipatinggames.FsDeclineParticipatingGamesMessage;
+import com.github.martinfrank.games.chessmodel.message.getparticipatinggames.FsSubmitParticipatingGamesMessage;
 import com.github.martinfrank.games.chessmodel.model.Game;
 import com.github.martinfrank.games.chessmodel.model.Player;
-import com.github.martinfrank.games.chessserver.server.data.ServerAppDataPool;
+import com.github.martinfrank.games.chessserver.server.data.DataPool;
 import com.github.martinfrank.tcpclientserver.ClientWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +14,8 @@ import java.util.List;
 
 public class GetParticipatingGamesHandler extends AbstractHandler<FcGetParticipatingGamesMessage> {
     private static final Logger LOGGER = LoggerFactory.getLogger(GetParticipatingGamesHandler.class);
-    public GetParticipatingGamesHandler(ServerAppDataPool serverAppDataPool) {
-        super(serverAppDataPool);
+    public GetParticipatingGamesHandler(DataPool dataPool) {
+        super(dataPool);
     }
 
     @Override
@@ -29,16 +29,16 @@ public class GetParticipatingGamesHandler extends AbstractHandler<FcGetParticipa
         if(declineReason != null){
             LOGGER.warn("declining reason = "+declineReason);
             FsDeclineParticipatingGamesMessage decline = new FsDeclineParticipatingGamesMessage(declineReason);
-            clientWorker.send(serverAppDataPool.messageParser.toJson(decline));
+            clientWorker.send(dataPool.messageParser.toJson(decline));
             return;
         }
-        List<Game> participatingGames = serverAppDataPool.currentGames.getParticipatingGames(message.player);
+        List<Game> participatingGames = dataPool.currentGames.getParticipatingGames(message.player);
         FsSubmitParticipatingGamesMessage submitServerInfoMessage = new FsSubmitParticipatingGamesMessage(participatingGames);
-        clientWorker.send(serverAppDataPool.messageParser.toJson(submitServerInfoMessage));
+        clientWorker.send(dataPool.messageParser.toJson(submitServerInfoMessage));
     }
 
     public String getDeclinedReason(Player player){
-        if (!serverAppDataPool.currentPlayers.contains(player)){
+        if (!dataPool.currentPlayers.contains(player)){
             return "you are not logged in";
         }
         return null;

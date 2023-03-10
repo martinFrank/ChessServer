@@ -1,6 +1,6 @@
 package com.github.martinfrank.games.chessserver.server.message;
 
-import com.github.martinfrank.games.chessmodel.message.FcGetParticipatingGamesMessage;
+import com.github.martinfrank.games.chessmodel.message.getparticipatinggames.FcGetParticipatingGamesMessage;
 import com.github.martinfrank.games.chessmodel.message.Message;
 import com.github.martinfrank.games.chessmodel.message.MessageParser;
 import com.github.martinfrank.games.chessmodel.message.MessageType;
@@ -14,12 +14,13 @@ public class FcGetParticipatingGamesMessageTest {
 
     private static final UUID TEST_ID = UUID.fromString("f62b659a-30ae-465b-8765-0096519dee70");
     private static final String TEST_NAME = "testName";
+    private static final int BLACK = 0x0;
 
     @Test
     public void testFcGetServerInfoMessageToJson(){
         //given
         MessageParser messageParser = new MessageParser();
-        Player player = new Player(TEST_ID, TEST_NAME);
+        Player player = new Player(TEST_ID, TEST_NAME, BLACK);
         FcGetParticipatingGamesMessage test = new FcGetParticipatingGamesMessage(player);
 
         //when

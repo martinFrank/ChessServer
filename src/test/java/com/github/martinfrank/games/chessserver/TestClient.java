@@ -1,15 +1,19 @@
 package com.github.martinfrank.games.chessserver;
 
-import com.github.martinfrank.games.chessmodel.message.FcCreateGameMessage;
-import com.github.martinfrank.games.chessmodel.message.FcGetOpenGamesMessage;
-import com.github.martinfrank.games.chessmodel.message.FcJoinGameMessage;
-import com.github.martinfrank.games.chessmodel.message.FcLoginMessage;
-import com.github.martinfrank.games.chessmodel.message.FcStartGameMessage;
+import com.github.martinfrank.games.chessmodel.message.creategame.FcCreateGameMessage;
+import com.github.martinfrank.games.chessmodel.message.getopengames.FcGetOpenGamesMessage;
+import com.github.martinfrank.games.chessmodel.message.joingame.FcJoinGameMessage;
+import com.github.martinfrank.games.chessmodel.message.login.FcLoginMessage;
+import com.github.martinfrank.games.chessmodel.message.selectColor.FcSelectColorMessage;
+import com.github.martinfrank.games.chessmodel.message.selectfield.FcSelectFieldMessage;
+import com.github.martinfrank.games.chessmodel.message.startgame.FcStartGameMessage;
 import com.github.martinfrank.games.chessmodel.message.Message;
 import com.github.martinfrank.games.chessmodel.message.MessageParser;
 import com.github.martinfrank.games.chessmodel.message.MessageType;
 import com.github.martinfrank.games.chessmodel.model.Game;
 import com.github.martinfrank.games.chessmodel.model.Player;
+import com.github.martinfrank.games.chessmodel.model.chess.Color;
+import com.github.martinfrank.games.chessmodel.model.chess.Field;
 import com.github.martinfrank.tcpclientserver.ClientMessageReceiver;
 import com.github.martinfrank.tcpclientserver.TcpClient;
 
@@ -18,7 +22,7 @@ import java.util.UUID;
 
 public class TestClient {
 
-    private final Player player = new Player(UUID.randomUUID(), "testeeeee");
+    private final Player player = new Player(UUID.fromString("427e678a-6462-43d5-8531-44521bb2205f"), "testeeeee", 0xFF00FF);
     private Game currentGame;
 
     public static void main(String[] args){
@@ -89,7 +93,8 @@ public class TestClient {
                 case FC_GET_OPEN_GAMES: return new FcGetOpenGamesMessage(player);
                 case FC_JOIN_GAME: return new FcJoinGameMessage(player, UUID.fromString(args[0]));
                 case FC_START_GAME: return new FcStartGameMessage(player, UUID.fromString(args[0]));
-
+                case FC_SELECT_FIELD: return new FcSelectFieldMessage(player, UUID.fromString(args[0]), new Field("A", "1"));
+                case FC_SELECT_COLOR: return new FcSelectColorMessage(player, UUID.fromString(args[0]), Color.BLACK);
                 default: return null;
             }
         }

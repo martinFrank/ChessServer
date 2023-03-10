@@ -1,6 +1,6 @@
 package com.github.martinfrank.games.chessserver.server.message;
 
-import com.github.martinfrank.games.chessmodel.message.FsSubmitParticipatingGamesMessage;
+import com.github.martinfrank.games.chessmodel.message.getparticipatinggames.FsSubmitParticipatingGamesMessage;
 import com.github.martinfrank.games.chessmodel.model.Game;
 import com.github.martinfrank.games.chessmodel.model.Player;
 import org.junit.Test;
@@ -16,11 +16,12 @@ public class FsSubmitParticipatingGamesTest {
 
     private static final String TEST_NAME_A = "a-name";
     private static final String TEST_NAME_B = "b-name";
+    private static final int BLACK = 0x0;
 
     @Test
     public void testFsSubmitServerInfoMessageToJson(){
-        Player aPlayer = new Player(TEST_ID_A, TEST_NAME_A);
-        Player bPlayer = new Player(TEST_ID_B, TEST_NAME_B);
+        Player aPlayer = new Player(TEST_ID_A, TEST_NAME_A, BLACK);
+        Player bPlayer = new Player(TEST_ID_B, TEST_NAME_B, BLACK);
         Game aGame = new Game(UUID.randomUUID(), aPlayer); //offenes
         Game bGame = new Game(UUID.randomUUID(), aPlayer); //mit teilnehmer b
         bGame.setGuestPlayer(bPlayer);

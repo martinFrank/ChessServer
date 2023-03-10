@@ -40,6 +40,9 @@ public class ClientMapping {
     }
 
     public ClientWorker getClientWorker(Player player) {
+        if(player == null){
+            return null;
+        }
         return clientMapping.get(player.playerId);
     }
 }

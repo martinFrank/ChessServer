@@ -1,6 +1,5 @@
 package com.github.martinfrank.games.chessserver;
 
-import com.github.martinfrank.tcpclientserver.TcpServer;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -10,13 +9,13 @@ import static org.mockito.Mockito.mock;
 /**
  * Unit test for simple App.
  */
-public class ChessServerAppTest extends TestCase {
+public class ChessServerTest extends TestCase {
     /**
      * Create the test case
      *
      * @param testName name of the test case
      */
-    public ChessServerAppTest(String testName) {
+    public ChessServerTest(String testName) {
         super(testName);
     }
 
@@ -24,7 +23,7 @@ public class ChessServerAppTest extends TestCase {
      * @return the suite of tests being tested
      */
     public static Test suite() {
-        return new TestSuite(ChessServerAppTest.class);
+        return new TestSuite(ChessServerTest.class);
     }
 
     /**
@@ -32,7 +31,7 @@ public class ChessServerAppTest extends TestCase {
      */
     public void testApp() {
         assertTrue(true);
-        ChessServerApp app = new ChessServerApp();
+        ChessServer app = new ChessServer();
 //        TcpServer mock = mock(TcpServer.class);
     }
 }

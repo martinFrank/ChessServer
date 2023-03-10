@@ -35,7 +35,7 @@ public class Players {
         return players.contains(player);
     }
 
-    public List<Player> getAll() {
-        return players;
+    public Player get(UUID playerId) {
+        return players.stream().filter(p -> p.hasId(playerId)).findAny().orElse(null);
     }
 }

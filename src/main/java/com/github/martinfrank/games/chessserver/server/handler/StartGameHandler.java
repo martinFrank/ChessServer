@@ -36,7 +36,7 @@ public class StartGameHandler extends AbstractHandler<FcStartGameMessage> {
         FsSubmitStartGameMessage response = new FsSubmitStartGameMessage(game, game.gameContent);
         String jsonResponse = dataPool.messageParser.toJson(response);
         clientWorker.send(jsonResponse);
-        sendToGuest(game, jsonResponse);
+        sendToOtherParticipant(jsonResponse, game, message.player);
     }
 
     private String getDeclineReasonForStartGame(Game game, FcStartGameMessage message) {

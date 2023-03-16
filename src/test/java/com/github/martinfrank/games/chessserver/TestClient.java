@@ -4,13 +4,12 @@ import com.github.martinfrank.games.chessmodel.message.creategame.FcCreateGameMe
 import com.github.martinfrank.games.chessmodel.message.getopengames.FcGetOpenGamesMessage;
 import com.github.martinfrank.games.chessmodel.message.joingame.FcJoinGameMessage;
 import com.github.martinfrank.games.chessmodel.message.login.FcLoginMessage;
-import com.github.martinfrank.games.chessmodel.message.selectColor.FcSelectColorMessage;
+import com.github.martinfrank.games.chessmodel.message.selectcolor.FcSelectColorMessage;
 import com.github.martinfrank.games.chessmodel.message.selectfield.FcSelectFieldMessage;
 import com.github.martinfrank.games.chessmodel.message.startgame.FcStartGameMessage;
 import com.github.martinfrank.games.chessmodel.message.Message;
 import com.github.martinfrank.games.chessmodel.message.MessageParser;
 import com.github.martinfrank.games.chessmodel.message.MessageType;
-import com.github.martinfrank.games.chessmodel.model.Game;
 import com.github.martinfrank.games.chessmodel.model.Player;
 import com.github.martinfrank.games.chessmodel.model.chess.Color;
 import com.github.martinfrank.games.chessmodel.model.chess.Field;
@@ -22,8 +21,8 @@ import java.util.UUID;
 
 public class TestClient {
 
-    private final Player player = new Player(UUID.fromString("427e678a-6462-43d5-8531-44521bb2205f"), "testeeeee", 0xFF00FF);
-    private Game currentGame;
+    private final Player player = new Player(UUID.fromString("427e678a-6462-43d5-8531-44521bb2205f"), "testeeeee", 0xFFFF00);
+
 
     public static void main(String[] args){
         new TestClient().start();
@@ -43,8 +42,8 @@ public class TestClient {
             }
         };
 
-//        TcpClient client = new TcpClient("192.168.0.65", 8100, serverMessageReceiver);
-        TcpClient client = new TcpClient("192.168.56.1", 8100, serverMessageReceiver);
+        TcpClient client = new TcpClient("192.168.0.65", 8100, serverMessageReceiver);
+//        TcpClient client = new TcpClient("192.168.56.1", 8100, serverMessageReceiver);
 //        TcpClient client = new TcpClient("elitegames.chickenkiller.com", 8100, serverMessageReceiver);
 
         client.start();

@@ -1,9 +1,10 @@
 package com.github.martinfrank.games.chessserver.server.handler;
 
-import com.github.martinfrank.games.chessmodel.message.selectColor.FcSelectColorMessage;
-import com.github.martinfrank.games.chessmodel.message.selectColor.FsDeclineSelectColorMessage;
-import com.github.martinfrank.games.chessmodel.message.selectColor.FsSubmitSelectColorMessage;
+import com.github.martinfrank.games.chessmodel.message.selectcolor.FcSelectColorMessage;
+import com.github.martinfrank.games.chessmodel.message.selectcolor.FsDeclineSelectColorMessage;
+import com.github.martinfrank.games.chessmodel.message.selectcolor.FsSubmitSelectColorMessage;
 import com.github.martinfrank.games.chessmodel.model.Game;
+import com.github.martinfrank.games.chessmodel.model.Player;
 import com.github.martinfrank.games.chessserver.server.data.DataPool;
 import com.github.martinfrank.tcpclientserver.ClientWorker;
 import org.slf4j.Logger;
@@ -35,7 +36,7 @@ public class SelectColorHandler extends AbstractHandler<FcSelectColorMessage> {
         FsSubmitSelectColorMessage response = new FsSubmitSelectColorMessage(game, change);
         String jsonResponse = dataPool.messageParser.toJson(response);
         clientWorker.send(jsonResponse);
-        sendToGuest(game, jsonResponse);
+        sendToOtherParticipant(jsonResponse, game, message.player);
     }
 
     private String getDeclineReason(Game game, FcSelectColorMessage message) {

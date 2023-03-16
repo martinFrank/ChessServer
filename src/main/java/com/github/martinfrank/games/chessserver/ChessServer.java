@@ -6,7 +6,8 @@ import com.github.martinfrank.games.chessmodel.message.getopengames.FcGetOpenGam
 import com.github.martinfrank.games.chessmodel.message.getparticipatinggames.FcGetParticipatingGamesMessage;
 import com.github.martinfrank.games.chessmodel.message.joingame.FcJoinGameMessage;
 import com.github.martinfrank.games.chessmodel.message.login.FcLoginMessage;
-import com.github.martinfrank.games.chessmodel.message.selectColor.FcSelectColorMessage;
+import com.github.martinfrank.games.chessmodel.message.movefigure.FcMoveFigureMessage;
+import com.github.martinfrank.games.chessmodel.message.selectcolor.FcSelectColorMessage;
 import com.github.martinfrank.games.chessmodel.message.selectfield.FcSelectFieldMessage;
 import com.github.martinfrank.games.chessmodel.message.startgame.FcStartGameMessage;
 import com.github.martinfrank.games.chessmodel.message.welcome.FsWelcomeMessage;
@@ -80,6 +81,12 @@ public class ChessServer implements ServerMessageReceiver {
             case FC_GET_GAME_CONTENT: {
                 LOGGER.debug("handle FC get game content: " + message);
                 new GameContentHandler(dataPool).handle(clientWorker, (FcGetGameContentMessage) message);
+                break;
+            }
+
+            case FC_MOVE_FIGURE: {
+                LOGGER.debug("handle FC move figure: " + message);
+                new MoveFigureHandler(dataPool).handle(clientWorker, (FcMoveFigureMessage) message);
                 break;
             }
 

@@ -2,7 +2,6 @@ package com.github.martinfrank.games.chessserver;
 
 import com.github.martinfrank.games.chessmodel.message.creategame.FcCreateGameMessage;
 import com.github.martinfrank.games.chessmodel.message.getgamecontent.FcGetGameContentMessage;
-import com.github.martinfrank.games.chessmodel.message.disconnect.FsSubmitDisconnectMessage;
 import com.github.martinfrank.games.chessmodel.message.getopengames.FcGetOpenGamesMessage;
 import com.github.martinfrank.games.chessmodel.message.getparticipatinggames.FcGetParticipatingGamesMessage;
 import com.github.martinfrank.games.chessmodel.message.joingame.FcJoinGameMessage;
@@ -12,26 +11,13 @@ import com.github.martinfrank.games.chessmodel.message.selectfield.FcSelectField
 import com.github.martinfrank.games.chessmodel.message.startgame.FcStartGameMessage;
 import com.github.martinfrank.games.chessmodel.message.welcome.FsWelcomeMessage;
 import com.github.martinfrank.games.chessmodel.message.Message;
-import com.github.martinfrank.games.chessmodel.model.Game;
-import com.github.martinfrank.games.chessmodel.model.Player;
 import com.github.martinfrank.games.chessserver.server.data.DataPool;
-import com.github.martinfrank.games.chessserver.server.handler.CreateGameHandler;
-import com.github.martinfrank.games.chessserver.server.handler.GameContentHandler;
-import com.github.martinfrank.games.chessserver.server.handler.GetOpenGameHandler;
-import com.github.martinfrank.games.chessserver.server.handler.GetParticipatingGamesHandler;
-import com.github.martinfrank.games.chessserver.server.handler.JoinGameHandler;
-import com.github.martinfrank.games.chessserver.server.handler.LoginHandler;
-import com.github.martinfrank.games.chessserver.server.handler.SelectColorHandler;
-import com.github.martinfrank.games.chessserver.server.handler.SelectFieldHandler;
-import com.github.martinfrank.games.chessserver.server.handler.StartGameHandler;
+import com.github.martinfrank.games.chessserver.server.handler.*;
 import com.github.martinfrank.tcpclientserver.ClientWorker;
 import com.github.martinfrank.tcpclientserver.ServerMessageReceiver;
 import com.github.martinfrank.tcpclientserver.TcpServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Hello world!
@@ -114,26 +100,10 @@ public class ChessServer implements ServerMessageReceiver {
 
     public void notifyDisconnect(ClientWorker clientWorker) {
         LOGGER.debug("client has disconnected: '" + clientWorker + "'");
-        UUID playerId = dataPool.clientMapping.getPlayerId(clientWorker);
-        Player player = dataPool.currentPlayers.get(playerId);
-        sendGoodbyeToOpenGames(player);
-        dataPool.currentPlayers.remove(playerId);
-        dataPool.clientMapping.remove(clientWorker);
+        new GoodByeHandler(dataPool).handleDisconnect(clientWorker);
     }
 
-    private void sendGoodbyeToOpenGames(Player player) {
-        List<Game> games = dataPool.currentGames.getParticipatingGames(player);
-        for (Game game : games) {
-            LOGGER.debug("sending goodbye");
-            ClientWorker worker = dataPool.clientMapping.getClientWorker(game.getOther(player));
-            if (worker != null) {
-                FsSubmitDisconnectMessage message = new FsSubmitDisconnectMessage(player, game);
-                LOGGER.debug("message = "+message);
-                String json = dataPool.messageParser.toJson(message);
-                worker.send(json);
-            }
-        }
-    }
+
 
 
     public void notifyUp(String s) {

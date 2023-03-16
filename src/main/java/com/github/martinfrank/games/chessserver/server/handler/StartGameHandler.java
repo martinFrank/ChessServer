@@ -30,9 +30,10 @@ public class StartGameHandler extends AbstractHandler<FcStartGameMessage> {
             clientWorker.send(dataPool.messageParser.toJson(response));
             return;
         }
-        game.gameContent.setStarted(true);
 
-        FsSubmitStartGameMessage response = new FsSubmitStartGameMessage(game);
+        game.gameContent.startGame();
+
+        FsSubmitStartGameMessage response = new FsSubmitStartGameMessage(game, game.gameContent);
         String jsonResponse = dataPool.messageParser.toJson(response);
         clientWorker.send(jsonResponse);
         sendToGuest(game, jsonResponse);

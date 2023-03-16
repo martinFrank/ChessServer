@@ -31,7 +31,9 @@ public class JoinGameHandler extends AbstractHandler<FcJoinGameMessage> {
             return;
         }
 
-        game.setGuestPlayer(message.player);
+        if(!game.isHost(message.player)) {
+            game.setGuestPlayer(message.player);
+        }
         FsConfirmJoinGamesMessage response = new FsConfirmJoinGamesMessage(message.player, game);
         String jsonResponse = dataPool.messageParser.toJson(response);
         clientWorker.send(jsonResponse);
@@ -44,9 +46,6 @@ public class JoinGameHandler extends AbstractHandler<FcJoinGameMessage> {
         }
         if (game == null) {
             return "join game declined, no game with id " + message.gameId + " found";
-        }
-        if (game.gameContent.isStarted()) {
-            return "join game declined, game with id " + message.gameId + " is already started";
         }
         return null;
     }

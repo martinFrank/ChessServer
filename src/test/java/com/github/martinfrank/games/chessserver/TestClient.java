@@ -43,7 +43,8 @@ public class TestClient {
             }
         };
 
-        TcpClient client = new TcpClient("192.168.0.65", 8100, serverMessageReceiver);
+//        TcpClient client = new TcpClient("192.168.0.65", 8100, serverMessageReceiver);
+        TcpClient client = new TcpClient("192.168.56.1", 8100, serverMessageReceiver);
 //        TcpClient client = new TcpClient("elitegames.chickenkiller.com", 8100, serverMessageReceiver);
 
         client.start();
@@ -93,7 +94,7 @@ public class TestClient {
                 case FC_GET_OPEN_GAMES: return new FcGetOpenGamesMessage(player);
                 case FC_JOIN_GAME: return new FcJoinGameMessage(player, UUID.fromString(args[0]));
                 case FC_START_GAME: return new FcStartGameMessage(player, UUID.fromString(args[0]));
-                case FC_SELECT_FIELD: return new FcSelectFieldMessage(player, UUID.fromString(args[0]), new Field("A", "1"));
+                case FC_SELECT_FIELD: return new FcSelectFieldMessage(player, UUID.fromString(args[0]), new Field("2", "D"));
                 case FC_SELECT_COLOR: return new FcSelectColorMessage(player, UUID.fromString(args[0]), Color.BLACK);
                 default: return null;
             }

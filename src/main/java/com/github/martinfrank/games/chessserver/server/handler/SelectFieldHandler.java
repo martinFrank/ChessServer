@@ -40,7 +40,7 @@ public class SelectFieldHandler extends AbstractHandler<FcSelectFieldMessage> {
         if(game.isGuest(message.player)){
             game.gameContent.selectGuestField(message.field);
         }
-        FsSubmitSelectFieldMessage submitServerInfoMessage = new FsSubmitSelectFieldMessage(game.gameContent);
+        FsSubmitSelectFieldMessage submitServerInfoMessage = new FsSubmitSelectFieldMessage(game, game.gameContent);
         String json = dataPool.messageParser.toJson(submitServerInfoMessage);
         LOGGER.debug("handle select field done, sending json: "+json);
         clientWorker.send(json);

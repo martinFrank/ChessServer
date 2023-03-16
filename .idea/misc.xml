@@ -5,8 +5,8 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/../TcpClientServer/pom.xml" />
         <option value="$PROJECT_DIR$/../ChessGameModel/pom.xml" />
+        <option value="$PROJECT_DIR$/../TcpClientServer/pom.xml" />
       </list>
     </option>
   </component>

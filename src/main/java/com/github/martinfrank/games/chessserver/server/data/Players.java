@@ -15,15 +15,14 @@ public class Players {
     private final List<Player> players = new ArrayList<>();
 
     public void add(Player player) {
-        if(!players.contains(player)){
-            players.add(player);
-        }
+        players.remove(player);
+        players.add(player);
         LOGGER.debug("players.size(): " + players.size());
     }
 
     public void remove(UUID playerId) {
-        for(Player player: players){
-            if(player.playerId.equals(playerId)){
+        for (Player player : players) {
+            if (player.playerId.equals(playerId)) {
                 players.remove(player);
                 break;
             }

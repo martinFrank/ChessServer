@@ -19,14 +19,8 @@ public abstract class AbstractHandler<T extends Message> {
 
     public abstract void handle(ClientWorker clientWorker,  T message);
 
-    public void sendToGuest(Game game, String jsonResponse) {
-        ClientWorker guestWorker = dataPool.clientMapping.getClientWorker(game.getGuestPlayer());
-        if (guestWorker != null){
-            guestWorker.send(jsonResponse);
-        }
-    }
-
     public void sendToOtherParticipant(String jsonResponse, Game game, Player player) {
+        LOGGER.debug("sending to other participant: "+jsonResponse);
         Player other = game.getOther(player);
         ClientWorker otherWorker = dataPool.clientMapping.getClientWorker(other);
         if (otherWorker == null){

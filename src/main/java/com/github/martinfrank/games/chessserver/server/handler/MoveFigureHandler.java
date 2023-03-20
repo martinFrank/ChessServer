@@ -41,10 +41,9 @@ public class MoveFigureHandler extends AbstractHandler<FcMoveFigureMessage> {
 
         FsSubmitMoveFigureMessage response = new FsSubmitMoveFigureMessage(message.player, game, message.from, message.to);
         LOGGER.debug("sending submit message: "+response);
-        clientWorker.send(dataPool.messageParser.toJson(response));
         String jsonResponse = dataPool.messageParser.toJson(response);
         clientWorker.send(jsonResponse);
-        sendToGuest(game, jsonResponse);
+        sendToOtherParticipant(jsonResponse, game, message.player);
     }
 
     private String getDeclinedReason(Game game, FcMoveFigureMessage message) {

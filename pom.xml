@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.martinfrank.games.chessmodel</groupId>
-            <artifactId>ChessGameModel</artifactId>
+            <artifactId>chessgamemodel</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

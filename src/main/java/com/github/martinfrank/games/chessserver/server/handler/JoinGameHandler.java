@@ -31,9 +31,12 @@ public class JoinGameHandler extends AbstractHandler<FcJoinGameMessage> {
             return;
         }
 
-        if(!game.isHost(message.player)) {
-            game.setGuestPlayer(message.player);
+        if(game.isHost(message.player)) {
+            game.updateHostPlayer(message.player);
+        }else{
+            game.updateGuestPlayer(message.player);
         }
+
         FsConfirmJoinGamesMessage response = new FsConfirmJoinGamesMessage(message.player, game);
         String jsonResponse = dataPool.messageParser.toJson(response);
         clientWorker.send(jsonResponse);

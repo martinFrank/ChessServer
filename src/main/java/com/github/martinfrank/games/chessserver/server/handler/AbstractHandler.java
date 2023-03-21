@@ -22,6 +22,7 @@ public abstract class AbstractHandler<T extends Message> {
     public void sendToOtherParticipant(String jsonResponse, Game game, Player player) {
         LOGGER.debug("sending to other participant: "+jsonResponse);
         Player other = game.getOther(player);
+        LOGGER.debug("other player:"+other);
         ClientWorker otherWorker = dataPool.clientMapping.getClientWorker(other);
         if (otherWorker == null){
             LOGGER.warn("could not find other participant from game");

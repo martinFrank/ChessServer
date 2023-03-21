@@ -28,17 +28,4 @@ public class FcCreateGameMessageTest {
         System.out.println(jsonString);
     }
 
-    @Test
-    public void testFsSubmitCreatedGame(){
-        //given
-        Player player = new Player(TEST_ID, TEST_NAME, BLACK);
-        Game game = new Game(UUID.randomUUID(), player);
-        FsSubmitCreatedGameMessage message = new FsSubmitCreatedGameMessage(game);
-        MessageParser messageParser = new MessageParser();
-
-        //when
-        game.gameContent.setHostOnline(true);
-        String jsonString = messageParser.toJson(message);
-        System.out.println(jsonString);
-    }
 }

@@ -20,7 +20,6 @@ public class CreateGameHandler extends AbstractHandler<FcCreateGameMessage> {
 
     @Override
     public void handle(ClientWorker clientWorker, FcCreateGameMessage message) {
-//        ClientWorker clientWorker = serverAppDataPool.clientMapping.getClientWorker(message.player);
         if(clientWorker == null){
             LOGGER.warn("could not find matching client worker");
             return;

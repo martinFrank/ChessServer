@@ -1,6 +1,7 @@
 package com.github.martinfrank.games.chessserver;
 
 import com.github.martinfrank.games.chessmodel.message.creategame.FcCreateGameMessage;
+import com.github.martinfrank.games.chessmodel.message.deletegame.FcDeleteGameMessage;
 import com.github.martinfrank.games.chessmodel.message.getgamecontent.FcGetGameContentMessage;
 import com.github.martinfrank.games.chessmodel.message.getopengames.FcGetOpenGamesMessage;
 import com.github.martinfrank.games.chessmodel.message.getparticipatinggames.FcGetParticipatingGamesMessage;
@@ -49,7 +50,7 @@ public class ChessServer implements ServerMessageReceiver {
                 break;
             }
             case FC_GET_OPEN_GAMES: {
-                LOGGER.debug("handle FC select figure: " + message);
+                LOGGER.debug("handle FC get open games: " + message);
                 new GetOpenGameHandler(dataPool).handle(clientWorker, (FcGetOpenGamesMessage) message);
                 break;
             }
@@ -90,6 +91,12 @@ public class ChessServer implements ServerMessageReceiver {
                 break;
             }
 
+            case FC_DELETE_GAME:{
+                LOGGER.debug("handle FC delete game: " + message);
+                new DeleteGameHandler(dataPool).handle(clientWorker, (FcDeleteGameMessage) message);
+                break;
+            }
+
             default: {
                 handleUnknownMessage(clientWorker, raw);
             }
@@ -97,7 +104,7 @@ public class ChessServer implements ServerMessageReceiver {
     }
 
     private void debugData() {
-        LOGGER.debug("games.size: " + dataPool.currentGames.toString());
+//        LOGGER.debug("games.size: " + dataPool.currentGames.toString());
     }
 
     private void handleUnknownMessage(ClientWorker clientWorker, String raw) {

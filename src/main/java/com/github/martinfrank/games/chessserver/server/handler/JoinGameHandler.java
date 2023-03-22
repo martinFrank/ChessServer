@@ -31,6 +31,7 @@ public class JoinGameHandler extends AbstractHandler<FcJoinGameMessage> {
             return;
         }
 
+        dataPool.updatePlayersInGames(game);
         if(game.isHost(message.player)) {
             game.updateHostPlayer(message.player);
         }else{

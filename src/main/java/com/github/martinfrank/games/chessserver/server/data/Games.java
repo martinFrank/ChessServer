@@ -17,6 +17,7 @@ public class Games {
 
     private final List<Game> games = new ArrayList<>();
 
+
     public List<Game> getParticipatingGames(Player player) {
         return getParticipatingGames(player, DEFAULT_LIMIT);
     }
@@ -59,5 +60,9 @@ public class Games {
         return "Games{" +
                 "games.size=" + games.size() +
                 '}';
+    }
+
+    private void updatePlayers(Game game, Players players){
+
     }
 }

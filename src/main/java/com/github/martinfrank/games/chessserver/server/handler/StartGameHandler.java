@@ -23,6 +23,7 @@ public class StartGameHandler extends AbstractHandler<FcStartGameMessage> {
             return;
         }
         Game game = dataPool.currentGames.findById(message.gameId);
+
         String reason = getDeclineReasonForStartGame(game, message);
         if (reason != null) {
             LOGGER.warn("declining reason = "+reason);
@@ -30,10 +31,10 @@ public class StartGameHandler extends AbstractHandler<FcStartGameMessage> {
             clientWorker.send(dataPool.messageParser.toJson(response));
             return;
         }
+        dataPool.updatePlayersInGames(game);
+        game.chessGame.startGame();
 
-        game.gameContent.startGame();
-
-        FsSubmitStartGameMessage response = new FsSubmitStartGameMessage(game, game.gameContent);
+        FsSubmitStartGameMessage response = new FsSubmitStartGameMessage(game, game.chessGame);
         String jsonResponse = dataPool.messageParser.toJson(response);
         clientWorker.send(jsonResponse);
         sendToOtherParticipant(jsonResponse, game, message.player);
@@ -46,10 +47,10 @@ public class StartGameHandler extends AbstractHandler<FcStartGameMessage> {
         if (game == null) {
             return "start game declined, no game with id " + message.gameId + " found";
         }
-        if (game.gameContent.isStarted()) {
+        if (game.chessGame.isStarted()) {
             return "start game declined, game with id " + message.gameId + " is already started";
         }
-        if (!game.hostPlayer.equals(message.player)) {
+        if (!game.getHostPlayer().equals(message.player)) {
             return "start game declined, you are not host of game with id " + message.gameId;
         }
         if(game.getGuestPlayer() == null){

@@ -4,7 +4,6 @@ import com.github.martinfrank.games.chessmodel.message.selectcolor.FcSelectColor
 import com.github.martinfrank.games.chessmodel.message.selectcolor.FsDeclineSelectColorMessage;
 import com.github.martinfrank.games.chessmodel.message.selectcolor.FsSubmitSelectColorMessage;
 import com.github.martinfrank.games.chessmodel.model.Game;
-import com.github.martinfrank.games.chessmodel.model.Player;
 import com.github.martinfrank.games.chessserver.server.data.DataPool;
 import com.github.martinfrank.tcpclientserver.ClientWorker;
 import org.slf4j.Logger;
@@ -31,7 +30,8 @@ public class SelectColorHandler extends AbstractHandler<FcSelectColorMessage> {
             clientWorker.send(dataPool.messageParser.toJson(response));
             return;
         }
-        game.gameContent.setHostColor(message.desiredColor);
+        dataPool.updatePlayersInGames(game);
+        game.chessGame.setHostColor(message.desiredColor);
         String change = "Player " + message.player.playerName + " changed his/her color to " + message.desiredColor;
         FsSubmitSelectColorMessage response = new FsSubmitSelectColorMessage(game, change);
         String jsonResponse = dataPool.messageParser.toJson(response);
@@ -46,10 +46,10 @@ public class SelectColorHandler extends AbstractHandler<FcSelectColorMessage> {
         if (game == null) {
             return "change color declined, no game with id " + message.gameId + " found";
         }
-        if (game.gameContent.isStarted()) {
+        if (game.chessGame.isStarted()) {
             return "change color declined, game with id " + message.gameId + " is already started";
         }
-        if (!game.hostPlayer.equals(message.player)) {
+        if (!game.getHostPlayer().equals(message.player)) {
             return "change color declined, you are not host of game with id " + message.gameId;
         }
         return null;

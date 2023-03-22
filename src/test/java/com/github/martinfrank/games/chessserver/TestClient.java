@@ -42,8 +42,8 @@ public class TestClient {
             }
         };
 
-//        TcpClient client = new TcpClient("192.168.0.65", 8100, serverMessageReceiver);
-        TcpClient client = new TcpClient("192.168.61.221", 8100, serverMessageReceiver);
+        TcpClient client = new TcpClient("192.168.0.65", 8100, serverMessageReceiver);
+//        TcpClient client = new TcpClient("192.168.61.221", 8100, serverMessageReceiver);
 //        TcpClient client = new TcpClient("192.168.56.1", 8100, serverMessageReceiver);
 //        TcpClient client = new TcpClient("elitegames.chickenkiller.com", 8100, serverMessageReceiver);
 

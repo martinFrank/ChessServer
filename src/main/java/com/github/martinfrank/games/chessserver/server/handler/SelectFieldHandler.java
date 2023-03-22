@@ -4,14 +4,10 @@ import com.github.martinfrank.games.chessmodel.message.selectfield.FcSelectField
 import com.github.martinfrank.games.chessmodel.message.selectfield.FsDeclineSelectFieldMessage;
 import com.github.martinfrank.games.chessmodel.message.selectfield.FsSubmitSelectFieldMessage;
 import com.github.martinfrank.games.chessmodel.model.Game;
-import com.github.martinfrank.games.chessmodel.model.chess.Field;
-import com.github.martinfrank.games.chessmodel.model.chess.Participant;
 import com.github.martinfrank.games.chessserver.server.data.DataPool;
 import com.github.martinfrank.tcpclientserver.ClientWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 public class SelectFieldHandler extends AbstractHandler<FcSelectFieldMessage> {
 
@@ -28,6 +24,7 @@ public class SelectFieldHandler extends AbstractHandler<FcSelectFieldMessage> {
             return;
         }
         Game game = dataPool.currentGames.findById(message.gameId);
+
         String reason = getDeclineReason(game, message);
         if (reason != null) {
             LOGGER.warn("declining reason = " + reason);
@@ -36,9 +33,10 @@ public class SelectFieldHandler extends AbstractHandler<FcSelectFieldMessage> {
             return;
         }
 
-        game.gameContent.getThisParticipant(message.player).selectField(message.field);
+        dataPool.updatePlayersInGames(game);
+        game.chessGame.getThisParticipant(message.player).selectField(message.field);
 
-        FsSubmitSelectFieldMessage submitServerInfoMessage = new FsSubmitSelectFieldMessage(game, game.gameContent);
+        FsSubmitSelectFieldMessage submitServerInfoMessage = new FsSubmitSelectFieldMessage(message.player, game, message.field);
         String json = dataPool.messageParser.toJson(submitServerInfoMessage);
         LOGGER.debug("handle select field done, sending json: " + json);
         clientWorker.send(json);
@@ -53,7 +51,7 @@ public class SelectFieldHandler extends AbstractHandler<FcSelectFieldMessage> {
         if (!game.isParticipant(message.player)) {
             return "you are not part of this game";
         }
-        if (!game.gameContent.isStarted()) {
+        if (!game.chessGame.isStarted()) {
             return "the game is not started yet";
         }
         return null;

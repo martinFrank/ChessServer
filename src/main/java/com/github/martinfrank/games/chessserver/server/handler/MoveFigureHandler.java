@@ -1,13 +1,9 @@
 package com.github.martinfrank.games.chessserver.server.handler;
 
-import com.github.martinfrank.games.chessmodel.message.getgamecontent.FcGetGameContentMessage;
-import com.github.martinfrank.games.chessmodel.message.getgamecontent.FsDeclineGameContentMessage;
-import com.github.martinfrank.games.chessmodel.message.getgamecontent.FsSubmitGameContentMessage;
 import com.github.martinfrank.games.chessmodel.message.movefigure.FcMoveFigureMessage;
 import com.github.martinfrank.games.chessmodel.message.movefigure.FsDeclineMoveFigureMessage;
 import com.github.martinfrank.games.chessmodel.message.movefigure.FsSubmitMoveFigureMessage;
 import com.github.martinfrank.games.chessmodel.model.Game;
-import com.github.martinfrank.games.chessmodel.model.chess.Field;
 import com.github.martinfrank.games.chessserver.server.data.DataPool;
 import com.github.martinfrank.tcpclientserver.ClientWorker;
 import org.slf4j.Logger;
@@ -28,6 +24,7 @@ public class MoveFigureHandler extends AbstractHandler<FcMoveFigureMessage> {
         }
 
         Game game = dataPool.currentGames.findById(message.gameId);
+
         String declineReason = getDeclinedReason(game, message);
         if(declineReason != null){
             LOGGER.warn("declining reason = "+declineReason);
@@ -37,7 +34,8 @@ public class MoveFigureHandler extends AbstractHandler<FcMoveFigureMessage> {
             return;
         }
 
-        game.gameContent.moveFigure(message.from, message.to);
+        dataPool.updatePlayersInGames(game);
+        game.chessGame.moveFigure(message.from, message.to);
 
         FsSubmitMoveFigureMessage response = new FsSubmitMoveFigureMessage(message.player, game, message.from, message.to);
         LOGGER.debug("sending submit message: "+response);
@@ -56,7 +54,7 @@ public class MoveFigureHandler extends AbstractHandler<FcMoveFigureMessage> {
         if(!game.isParticipant(message.player)){
             return "Player '"+message.player+"' is not part of this game";
         }
-        if(!game.gameContent.isValidMove(message.from, message.to, message.player)){
+        if(!game.chessGame.isValidMove(message.from, message.to, message.player)){
             return "It is not valid for player '"+message.player+"' to move from '"+message.from+"' to '"+message.to+"'";
         }
         return null;

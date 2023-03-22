@@ -4,7 +4,6 @@ import com.github.martinfrank.games.chessmodel.message.getgamecontent.FcGetGameC
 import com.github.martinfrank.games.chessmodel.message.getgamecontent.FsDeclineGameContentMessage;
 import com.github.martinfrank.games.chessmodel.message.getgamecontent.FsSubmitGameContentMessage;
 import com.github.martinfrank.games.chessmodel.model.Game;
-import com.github.martinfrank.games.chessmodel.model.GameContent;
 import com.github.martinfrank.games.chessserver.server.data.DataPool;
 import com.github.martinfrank.tcpclientserver.ClientWorker;
 import org.slf4j.Logger;
@@ -36,6 +35,7 @@ public class GameContentHandler extends AbstractHandler<FcGetGameContentMessage>
             return;
         }
 
+        dataPool.updatePlayersInGames(game);
         FsSubmitGameContentMessage response = new FsSubmitGameContentMessage(game);
         LOGGER.debug("sending submit message: "+response);
         clientWorker.send(dataPool.messageParser.toJson(response));
